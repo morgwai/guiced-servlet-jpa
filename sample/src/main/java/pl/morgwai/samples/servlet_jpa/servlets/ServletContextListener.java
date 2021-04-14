@@ -10,6 +10,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebListener;
 import javax.websocket.DeploymentException;
+import javax.websocket.server.ServerEndpointConfig;
 
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -89,6 +90,16 @@ public class ServletContextListener extends JpaServletContextListener {
 		addEndpoint(ChatEndpoint.class, ChatEndpoint.PATH);
 	}
 
+	@Override
+	protected void addEndpoint(Class<?> endpointClass, String path) throws DeploymentException {
+		websocketContainer.addEndpoint(
+			ServerEndpointConfig.Builder
+				.create(endpointClass, path)
+				.configurator(new PingingGuiceEndpointConfigurator())
+				.build());
+		log.info("registered endpoint " + endpointClass.getSimpleName());
+	}
+
 
 
 	/**
@@ -97,6 +108,7 @@ public class ServletContextListener extends JpaServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
 		ChatEndpoint.shutdown();
+		PingingGuiceEndpointConfigurator.stopPinger();
 
 		// close executors in parallel to speed up the shutdown
 		Thread externalServiceFinalizer = new Thread(() -> {
