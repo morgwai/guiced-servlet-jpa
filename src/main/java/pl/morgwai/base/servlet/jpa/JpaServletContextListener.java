@@ -146,7 +146,7 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
 		super.contextDestroyed(event);
-		gracefullyShutdownExecutor(jpaExecutor, getJpaExecutorShutdownSeconds());
+		jpaExecutor.tryShutdownGracefully(getJpaExecutorShutdownSeconds());
 		entityManagerFactory.close();
 		log.info("entity manager factory " + getMainPersistenceUnitName() + " shutdown completed");
 	}

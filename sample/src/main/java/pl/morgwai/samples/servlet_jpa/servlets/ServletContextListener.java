@@ -112,7 +112,7 @@ public class ServletContextListener extends JpaServletContextListener {
 
 		// close executors in parallel to speed up the shutdown
 		Thread externalServiceFinalizer = new Thread(() -> {
-			gracefullyShutdownExecutor(externalServiceExecutor, 5);
+			externalServiceExecutor.tryShutdownGracefully(5);
 		});
 		externalServiceFinalizer.start();
 
