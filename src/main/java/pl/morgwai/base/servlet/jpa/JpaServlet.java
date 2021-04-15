@@ -119,7 +119,11 @@ public abstract class JpaServlet extends HttpServlet {
 	 * operation(s) we need to obtain a new <code>EntityManager</code>, so, to prevent
 	 * request-scoped {@link #entityManagerProvider} from reusing the old (closed one), it needs to
 	 * be removed from the scope.<br/>
-	 * <b>NOTICE:</b> most apps don't have such complex processing: make sure you really need to
+	 * <br/>
+	 * <b>NOTE:</b> this method is safe only if a given request is processed by a single thread
+	 * (which is the most common case).<br/>
+	 * <br/>
+	 * <b>NOTE:</b> most apps don't have such complex processing: make sure you really need to
 	 * use this method before doing so.
 	 */
 	public void removeEntityManagerFromRequestScope() {
