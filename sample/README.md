@@ -36,7 +36,6 @@ associated with the external service and JPA, configures injections, adds servle
 1. Java 11 is required to build the app (newer versions will probably work too).
 1. The app requires an H2 dialect JDBC datasource/connection pool named `jdbc/queryRecordDataSource` to be configured on the server. You can change the dialect in [persistence.xml file](src/main/resources/META-INF/persistence.xml).
 1. Configure DB operation executor thread pool size accordingly to the size of the above connection pool in [ServletContextListener.getMainJpaThreadPoolSize()](src/main/java/pl/morgwai/samples/servlet_jpa/servlets/ServletContextListener.java).
-1. Until `servlet-jpa` reaches 1.0 milestone and is uploaded to some public maven repo, you need to build and install it to your local repo with `mvn install` command in its folder.
 1. After that, issue in the root folder of this sample app repo: `mvn package`
 
 This will produce a Java war in `target` subfolder that can be deployed to any Servlet container such as Jetty or Tomcat.
