@@ -1,4 +1,4 @@
-# servlet-jpa
+# JPA and async Servlet integration
 
 A few base classes useful when developing asynchronous servlets performing JPA operations.<br/>
 Built on top of [Servlet and Websocket Guice Scopes library](https://github.com/morgwai/servlet-scopes).
