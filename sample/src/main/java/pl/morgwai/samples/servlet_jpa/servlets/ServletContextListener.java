@@ -3,21 +3,22 @@
  */
 package pl.morgwai.samples.servlet_jpa.servlets;
 
+import java.lang.reflect.InvocationHandler;
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebListener;
-import javax.websocket.DeploymentException;
-import javax.websocket.server.ServerEndpointConfig;
 
 import com.google.inject.Module;
 import com.google.inject.Scopes;
 import com.google.inject.name.Names;
 
 import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
+import pl.morgwai.base.servlet.guiced.utils.EndpointPingerDecorator;
 import pl.morgwai.base.servlet.jpa.JpaServletContextListener;
+import pl.morgwai.base.servlet.scopes.GuiceServerEndpointConfigurator;
+import pl.morgwai.base.servlet.utils.WebsocketPinger;
 import pl.morgwai.samples.servlet_jpa.data_access.ChatLogDao;
 import pl.morgwai.samples.servlet_jpa.data_access.ExternalService;
 import pl.morgwai.samples.servlet_jpa.data_access.ExternalServiceFake;
@@ -79,8 +80,7 @@ public class ServletContextListener extends JpaServletContextListener {
 
 
 	@Override
-	protected void configureServletsFiltersEndpoints() throws ServletException, DeploymentException
-	{
+	protected void configureServletsFiltersEndpoints() throws ServletException {
 		addServlet(ChatLogServlet.class.getSimpleName(), ChatLogServlet.class,
 				"/" + ChatLogServlet.URI);
 		addServlet(QueryRecordListServlet.class.getSimpleName(), QueryRecordListServlet.class,
@@ -90,25 +90,29 @@ public class ServletContextListener extends JpaServletContextListener {
 		addEndpoint(ChatEndpoint.class, ChatEndpoint.PATH);
 	}
 
+
+
 	@Override
-	protected void addEndpoint(Class<?> endpointClass, String path) throws DeploymentException {
-		websocketContainer.addEndpoint(
-			ServerEndpointConfig.Builder
-				.create(endpointClass, path)
-				.configurator(new PingingGuiceEndpointConfigurator())
-				.build());
-		log.info("registered endpoint " + endpointClass.getSimpleName());
+	protected void addEndpoint(Class<?> endpointClass, String path) throws ServletException {
+		super.addEndpoint(endpointClass, path, new SimplePingingEndpointConfigurator());
 	}
 
+	public class SimplePingingEndpointConfigurator extends GuiceServerEndpointConfigurator {
+
+		@Override
+		protected InvocationHandler getAdditionalDecorator(Object endpoint) {
+			return new EndpointPingerDecorator(endpoint, pinger);
+		}
+	}
+
+	WebsocketPinger pinger = new WebsocketPinger();
 
 
-	/**
-	 * Shuts down {@link #externalServiceExecutor}.
-	 */
+
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
+		pinger.stop();
 		ChatEndpoint.shutdown();
-		PingingGuiceEndpointConfigurator.stopPinger();
 
 		// close executors in parallel to speed up the shutdown
 		Thread externalServiceFinalizer = new Thread(() -> {
@@ -121,8 +125,4 @@ public class ServletContextListener extends JpaServletContextListener {
 			externalServiceFinalizer.join();
 		} catch (InterruptedException e) {}
 	}
-
-
-
-	static final Logger log = Logger.getLogger(ServletContextListener.class.getName());
 }
