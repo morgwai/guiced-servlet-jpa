@@ -56,7 +56,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 				super.service(asyncRequest, response);
 			} catch (Exception e) {
 				if (e instanceof IOException) {
-					log.finest(e.toString());  // most probably just a broken connection
+					log.finest("probably just a broken connection: " + e);
 				} else {
 					log.severe(e.toString());
 				}

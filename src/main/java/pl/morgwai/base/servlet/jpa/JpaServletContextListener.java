@@ -1,10 +1,7 @@
-/*
- * Copyright (c) Piotr Morgwai Kotarbinski
- */
+// Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
 package pl.morgwai.base.servlet.jpa;
 
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -44,7 +41,7 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	/**
 	 * If {@link #isSinglePersistenceUnitApp} is <code>false</code>, then this constant is used as
 	 * the value of <code>@Named</code> for bindings of {@link #entityManagerFactory},
-	 * {@link #jpaExecutor} and <code>EntityManager Provider</code> assoicated with the main
+	 * {@link #jpaExecutor} and <code>EntityManager Provider</code> associated with the main
 	 * persistence unit (the 1 returned by {@link #getMainPersistenceUnitName()}).
 	 */
 	public static final String MAIN_PERSISTENCE_UNIT_BINDING_NAME =
@@ -145,10 +142,10 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	 */
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
-		super.contextDestroyed(event);
 		jpaExecutor.tryShutdownGracefully(getJpaExecutorShutdownSeconds());
 		entityManagerFactory.close();
 		log.info("entity manager factory " + getMainPersistenceUnitName() + " shutdown completed");
+		super.contextDestroyed(event);
 	}
 
 
@@ -157,11 +154,5 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	 * @return default timeout of 5 seconds for the shutdown of {@link #jpaExecutor}. Can be
 	 * overridden to change the timeout if needed.
 	 */
-	protected int getJpaExecutorShutdownSeconds() {
-		return 5;
-	}
-
-
-
-	static final Logger log = Logger.getLogger(JpaServletContextListener.class.getName());
+	protected int getJpaExecutorShutdownSeconds() { return 5; }
 }
