@@ -1,6 +1,6 @@
-# Sample apps for servlet-scopes + servlet-jpa libs
+# Sample apps for guiced-servlet-jpa library
 
-2 simple web-apps demonstrating async interaction with JPA and other slow resources using servlet-jpa lib and servlet+websocket scopes from [servlet-scopes lib](https://github.com/morgwai/servlet-scopes).<br/>
+2 simple web-apps demonstrating integration of [guiced servlets](https://github.com/morgwai/servlet-scopes) with JPA and other slow resources using guiced-servlet-jpa library.<br/>
 The servlet app allows to store into DB queries to some fake external network resource, performs the given queries and updates records with the results.<br/>
 The websocket app is a simple chat over a websocket that also logs all messages into a DB
 (based on [Tomcat example app](https://github.com/apache/tomcat/blob/trunk/webapps/examples/websocket/chat.xhtml) and adapted to use this lib).

@@ -7,7 +7,7 @@
 			http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
 		version="4.0"
 	>
-	<display-name>Sample apps for servlet-jpa library</display-name>
+	<display-name>Sample apps for guiced-servlet-jpa library</display-name>
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

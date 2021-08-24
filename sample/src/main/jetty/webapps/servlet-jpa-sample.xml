@@ -3,7 +3,7 @@
 <!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">
 <Configure class="org.eclipse.jetty.webapp.WebAppContext" id="wac">
 	<Set name="contextPath">/</Set>
-	<Set name="war"><SystemProperty name="jetty.base" default="."/>/servlet-jpa-sample.war</Set>
+	<Set name="war"><SystemProperty name="jetty.base" default="."/>/guiced-servlet-jpa-sample.war</Set>
 
 	<New id="queryRecordDataSource" class="org.eclipse.jetty.plus.jndi.Resource">
 		<Arg>jdbc/queryRecordDataSource</Arg>

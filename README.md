@@ -1,7 +1,6 @@
-# JPA and async Servlet integration
+# JPA and guiced servlet integration
 
-A few base classes useful when developing asynchronous servlets performing JPA operations.<br/>
-Built on top of [Servlet and Websocket Guice Scopes library](https://github.com/morgwai/servlet-scopes).<br/>
+A few base classes useful when developing [guiced servlets](https://github.com/morgwai/servlet-scopes) performing JPA operations.<br/>
 <br/>
 **latest release: [1.0-alpha1](https://search.maven.org/artifact/pl.morgwai.base/servlet-jpa/1.0-alpha1/jar)**
 
