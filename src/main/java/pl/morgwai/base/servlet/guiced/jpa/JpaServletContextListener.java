@@ -27,18 +27,17 @@ import pl.morgwai.base.servlet.scopes.GuiceServletContextListener;
  * Components that perform JPA operations should request injection of
  * {@link com.google.inject.Provider Provider}&lt;{@link EntityManager}&gt; instances named
  * {@link #MAIN_PERSISTENCE_UNIT_BINDING_NAME} (or unnamed if
- * {@link #isSinglePersistenceUnitApp} is <code>true</code>) that will be scoped to a given request.
- * <br/>
+ * {@link #isSinglePersistenceUnitApp()}) that will be scoped to a given request.<br/>
  * JPA operations should be performed on the associated JPA executor that can be obtained by
  * requesting injection of {@link ContextTrackingExecutor} instance named
- * {@link #MAIN_PERSISTENCE_UNIT_BINDING_NAME} (or unnamed if {@link #isSinglePersistenceUnitApp}
- * is <code>true</code>).</p>
+ * {@link #MAIN_PERSISTENCE_UNIT_BINDING_NAME} (or unnamed if
+ * {@link #isSinglePersistenceUnitApp()}).</p>
  * <p>
  * Components that need to create named queries as a part of their initialization can request
  * injection of {@link EntityManagerFactory} instance named
- * {@link #MAIN_PERSISTENCE_UNIT_BINDING_NAME} (or unnamed if {@link #isSinglePersistenceUnitApp} is
- * <code>true</code>) and create 1 initial {@link EntityManager} instance to create
- * {@link javax.persistence.Query} instances.<br/>
+ * {@link #MAIN_PERSISTENCE_UNIT_BINDING_NAME} (or unnamed if {@link #isSinglePersistenceUnitApp()})
+ * and create 1 initial {@link EntityManager} instance to create {@link javax.persistence.Query}
+ * instances.<br/>
  * <b>NOTE:</b> this initial {@link EntityManagerFactory} and {@link EntityManager} instances
  * <b>MUST NOT</b> be retained beyond named queries initialization.
  * Subsequent JPA operations during normal application request processing should happen via
@@ -62,19 +61,19 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	protected abstract int getMainJpaThreadPoolSize();
 
 	/**
-	 * Does this app use only 1 persistence unit. If not, then the value should be changed at the
-	 * very beginning of {@link #configureInjections()} in subclasses before calling super.
+	 * Does this app use only 1 persistence unit.
 	 * <p>
-	 * If this flag is <code>true</code> then {@link EntityManager} instances,
-	 * {@link #entityManagerFactory} and its associated JPA executor are bound for injection
-	 * without names, so that user-defined components don't need to annotate injected fields/params
-	 * with <code>@Named(JpaServletContextListener.MAIN_PERSISTENCE_UNIT_BINDING_NAME)</code>
-	 * when there's only 1 choice.</p>
+	 * If <code>true</code> then {@link EntityManager} instances, {@link #entityManagerFactory} and
+	 * its associated {@link ContextTrackingExecutor} are bound for injection without names, so that
+	 * user-defined components don't need to annotate injected fields/params with
+	 * <code>@Named(JpaServletContextListener.MAIN_PERSISTENCE_UNIT_BINDING_NAME)</code> when
+	 * there's only 1 choice.</p>
+	 * @return by default <code>true</code>.
 	 */
-	public static boolean isSinglePersistenceUnitApp = true;
+	protected boolean isSinglePersistenceUnitApp() { return true; }
 
 	/**
-	 * If {@link #isSinglePersistenceUnitApp} is <code>false</code>, then this constant is used as
+	 * If {@link #singlePersistenceUnitApp} is <code>false</code>, then this constant is used as
 	 * the value of <code>@Named</code> for bindings of {@link #entityManagerFactory},
 	 * {@link #jpaExecutor} and <code>EntityManager Provider</code> associated with the main
 	 * persistence unit (the 1 returned by {@link #getMainPersistenceUnitName()}).
@@ -86,11 +85,13 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 
 	EntityManagerFactory entityManagerFactory;
 	ContextTrackingExecutor jpaExecutor;
+	static boolean singlePersistenceUnitApp;
 
 
 
 	@Override
 	protected LinkedList<Module> configureInjections() {
+		singlePersistenceUnitApp = isSinglePersistenceUnitApp();
 		entityManagerFactory = Persistence.createEntityManagerFactory(
 				getMainPersistenceUnitName());
 		jpaExecutor = servletModule.newContextTrackingExecutor(
@@ -100,7 +101,7 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 
 		var modules = new LinkedList<Module>();
 		modules.add((binder) -> {
-			if (isSinglePersistenceUnitApp) {
+			if (singlePersistenceUnitApp) {
 				binder.bind(EntityManager.class)
 					.toProvider(() -> entityManagerFactory.createEntityManager())
 					.in(servletModule.requestScope);

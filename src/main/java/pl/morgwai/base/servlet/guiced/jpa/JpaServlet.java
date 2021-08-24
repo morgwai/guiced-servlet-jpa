@@ -53,7 +53,7 @@ public abstract class JpaServlet extends HttpServlet {
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-		entityManagerProvider = isSinglePersistenceUnitApp
+		entityManagerProvider = singlePersistenceUnitApp
 				? INJECTOR.getProvider(EntityManager.class)
 				: INJECTOR.getProvider(
 						Key.get(EntityManager.class, Names.named(getPersistenceUnitBindingName())));
@@ -126,7 +126,7 @@ public abstract class JpaServlet extends HttpServlet {
 	 * use this method before doing so.</p>
 	 */
 	public void removeEntityManagerFromRequestScope() {
-		requestContextTracker.getCurrentContext().removeAttribute(isSinglePersistenceUnitApp
+		requestContextTracker.getCurrentContext().removeAttribute(singlePersistenceUnitApp
 				? Key.get(EntityManager.class)
 				: Key.get(EntityManager.class, Names.named(getPersistenceUnitBindingName())));
 	}

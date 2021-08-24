@@ -77,7 +77,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		jpaExecutor = isSinglePersistenceUnitApp
+		jpaExecutor = singlePersistenceUnitApp
 			? INJECTOR.getInstance(ContextTrackingExecutor.class)
 			: INJECTOR.getInstance(Key.get(
 					ContextTrackingExecutor.class, Names.named(getPersistenceUnitBindingName())));
