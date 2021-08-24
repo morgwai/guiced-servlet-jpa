@@ -25,7 +25,7 @@ import pl.morgwai.samples.guiced_servlet_jpa.domain.QueryRecord;
  * {@link ContextTrackingExecutor} instances dedicated to each resource.
  * This avoids suspending threads from the server's main pool, while also passes context to threads
  * performing the slow operations and thus preserves request/session scoped objects
- * (<code>EntityManager</code> in this case).
+ * ({@link javax.persistence.EntityManager} in this case).
  */
 @SuppressWarnings("serial")
 public class SaveQueryServlet extends JpaServlet {

@@ -9,14 +9,14 @@ The websocket app is a simple chat over a websocket that also logs all messages 
 
 ## MAIN CLASSES
 
-### [QueryRecordListServlet](src/main/java/pl/morgwai/samples/guiced_servlet_jpa/servlets/QueryRecordListServlet.java) and [ChatLogServlet](src/main/java/pl/morgwai/samples/servlet_jpa/servlets/ChatLogServlet.java)
+### [QueryRecordListServlet](src/main/java/pl/morgwai/samples/guiced_servlet_jpa/servlets/QueryRecordListServlet.java) and [ChatLogServlet](src/main/java/pl/morgwai/samples/guiced_servlet_jpa/servlets/ChatLogServlet.java)
 
-Simple <i>"get data from the DB and put it in a response"</i> case servlets extending [SimpleAsyncJpaServlet](../src/main/java/pl/morgwai/base/servlet/jpa/SimpleAsyncJpaServlet.java).
+Simple <i>"get data from the DB and put it in a response"</i> case servlets extending [SimpleAsyncJpaServlet](../src/main/java/pl/morgwai/base/servlet/guiced/jpa/SimpleAsyncJpaServlet.java).
 
 
 ### [SaveQueryServlet](src/main/java/pl/morgwai/samples/guiced_servlet_jpa/servlets/SaveQueryServlet.java)
 
-A servlet that communicates with multiple slow resources that provide synchronous API only (DB via JPA and some external slow service). Dispatches slow operations to injected app wide [ContextTrackingExecutor](https://github.com/morgwai/guice-context-scopes/blob/master/src/main/java/pl/morgwai/base/guice/scopes/ContextTrackingExecutor.java) instances dedicated to each resource. This avoids suspending threads from the server's main pool, while also passes context to threads performing the slow operations and thus preserves request/session scoped objects (`EntityManager` in this case).
+A servlet extending [JpaServlet](../src/main/java/pl/morgwai/base/servlet/guiced/jpa/JpaServlet.java) that communicates with multiple slow resources that provide synchronous API only (DB via JPA and some external slow service). Dispatches slow operations to injected app wide [ContextTrackingExecutor](https://github.com/morgwai/guice-context-scopes/blob/master/src/main/java/pl/morgwai/base/guice/scopes/ContextTrackingExecutor.java) instances dedicated to each resource. This avoids suspending threads from the server's main pool, while also passes context to threads performing the slow operations and thus preserves request/session scoped objects (`EntityManager` in this case).
 
 
 ### [ChatEndpoint](src/main/java/pl/morgwai/samples/guiced_servlet_jpa/servlets/ChatEndpoint.java)

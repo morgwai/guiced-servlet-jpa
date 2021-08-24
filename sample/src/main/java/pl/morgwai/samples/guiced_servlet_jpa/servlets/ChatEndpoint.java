@@ -22,7 +22,7 @@ import pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry;
 /**
  * A simple "Chat over a WebSocket" endpoint that dispatches processing of incoming messages to
  * {@link #jpaExecutor the app wide executor associated with the persistence unit}, on which it logs
- * messages to the DB using <code>EntityManager</code> from injected {@link #entityManagerProvider
+ * messages to the DB using {@link EntityManager} from injected {@link #entityManagerProvider
  * Provider} (from the same request-scoped binding as servlets).
  */
 public class ChatEndpoint extends Endpoint {

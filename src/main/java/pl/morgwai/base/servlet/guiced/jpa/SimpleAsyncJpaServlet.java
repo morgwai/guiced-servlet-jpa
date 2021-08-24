@@ -22,14 +22,15 @@ import static pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener.*;
 
 /**
  * Base class for servlets that do not perform synchronous time consuming operations
- * other than JPA calls.<br/>
- * Request handling is dispatched to {@link #jpaExecutor app wide executor associated with
- * persistence unit's JDBC connection pool}.
+ * other than JPA calls.
+ * <p>
+ * Request handling is dispatched to the app wide {@link ContextTrackingExecutor JPA executor}
+ * associated with persistence unit's JDBC connection pool.
  * This way the total number of server's threads can remain constant and small (<font size='-2'>
  * number of CPU cores available to the process for the main request processing pool + size of the
  * JDBC connection pool for the persistence unit associated executor pool + some constant epsilon
  * for servlet container internals</font>), regardless of the number of concurrent requests, while
- * providing optimal performance.
+ * providing optimal performance.</p>
  */
 @SuppressWarnings("serial")
 public abstract class SimpleAsyncJpaServlet extends JpaServlet {
@@ -41,8 +42,9 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 
 
 	/**
-	 * Dispatches handling of incoming requests to {@link #jpaExecutor}.
-	 * Closes associated <code>EntityManager</code> at the end.
+	 * Dispatches handling of incoming requests to the app wide
+	 * {@link ContextTrackingExecutor JPA executor}.
+	 * Closes the associated {@link javax.persistence.EntityManager} at the end.
 	 */
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)

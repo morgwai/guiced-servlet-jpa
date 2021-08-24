@@ -24,8 +24,8 @@ import static pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener.*;
 
 /**
  * Base class for servlets that perform other type(s) of time consuming operations apart from JPA.
- * Requests injection of an <code>EntityManager Provider</code> and provides some related helper
- * methods ({@link #performInTx(Callable)}, {@link #removeEntityManagerFromRequestScope()}).
+ * Requests injection of an {@link Provider}&lt;{@link EntityManager}&gt; and provides some related
+ * helper methods: ({@link #performInTx(Callable)}, {@link #removeEntityManagerFromRequestScope()}).
  *
  * @see SimpleAsyncJpaServlet
  */
@@ -35,7 +35,7 @@ public abstract class JpaServlet extends HttpServlet {
 
 
 	/**
-	 * Provider of request scoped <code>EntityManager</code> instances obtained from a persistence
+	 * Provides request scoped {@link EntityManager} instances obtained from a persistence
 	 * unit determined by {@link #getPersistenceUnitBindingName()}.
 	 */
 	protected Provider<EntityManager> entityManagerProvider;
@@ -103,7 +103,8 @@ public abstract class JpaServlet extends HttpServlet {
 
 
 	/**
-	 * Removes associated <code>EntityManager</code> from the current request's scope.
+	 * Removes associated {@link EntityManager} from the current request's scope.
+	 * <p>
 	 * If your app performs some time consuming operations (such as network communication
 	 * long CPU/GPU intensive computations etc), that need to be surrounded by JPA operations that
 	 * do <b>not</b> need to be a part of the same transaction, like for example:
@@ -112,17 +113,17 @@ public abstract class JpaServlet extends HttpServlet {
 	 * 	SomeClass results = someExternaNetworkConnector.someLongOperation(someRecords);
 	 * 	someDbDao.storeSomeStatsAboutResults(results); // TX-2
 	 * </pre>
-	 * then it may significantly improve your app's performance to close <code>EntityManager</code>
+	 * then it may significantly improve your app's performance to close {@link EntityManager}
 	 * after the first (batch of) JPA operation(s). In such case, for the second (batch of) JPA
-	 * operation(s) we need to obtain a new <code>EntityManager</code>, so, to prevent
+	 * operation(s) a new {@link EntityManager} needs to be obtained, so, to prevent
 	 * request-scoped {@link #entityManagerProvider} from reusing the old (closed one), it needs to
-	 * be removed from the scope.<br/>
-	 * <br/>
+	 * be removed from the scope.</p>
+	 * <p>
 	 * <b>NOTE:</b> this method is safe only if a given request is processed by a single thread
-	 * (which is the most common case).<br/>
-	 * <br/>
-	 * <b>NOTE:</b> most apps don't have such complex processing: make sure you really need to
-	 * use this method before doing so.
+	 * (which is the most common case).</p>
+	 * <p>
+	 * Note: most apps don't have such complex processing: make sure you really need to
+	 * use this method before doing so.</p>
 	 */
 	public void removeEntityManagerFromRequestScope() {
 		requestContextTracker.getCurrentContext().removeAttribute(isSinglePersistenceUnitApp
