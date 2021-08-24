@@ -1,5 +1,5 @@
 // Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
-package pl.morgwai.samples.servlet_jpa.servlets;
+package pl.morgwai.samples.guiced_servlet_jpa.servlets;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
-import pl.morgwai.base.servlet.jpa.JpaServlet;
-import pl.morgwai.samples.servlet_jpa.data_access.ExternalService;
-import pl.morgwai.samples.servlet_jpa.data_access.QueryRecordDao;
-import pl.morgwai.samples.servlet_jpa.domain.QueryRecord;
+import pl.morgwai.base.servlet.guiced.jpa.JpaServlet;
+import pl.morgwai.samples.guiced_servlet_jpa.data_access.ExternalService;
+import pl.morgwai.samples.guiced_servlet_jpa.data_access.QueryRecordDao;
+import pl.morgwai.samples.guiced_servlet_jpa.domain.QueryRecord;
 
 
 

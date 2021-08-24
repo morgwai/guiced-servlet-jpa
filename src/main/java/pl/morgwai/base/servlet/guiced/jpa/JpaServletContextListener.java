@@ -1,5 +1,5 @@
 // Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
-package pl.morgwai.base.servlet.jpa;
+package pl.morgwai.base.servlet.guiced.jpa;
 
 import java.util.LinkedList;
 
@@ -45,7 +45,7 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	 * persistence unit (the 1 returned by {@link #getMainPersistenceUnitName()}).
 	 */
 	public static final String MAIN_PERSISTENCE_UNIT_BINDING_NAME =
-			"pl.morgwai.base.servlet.GuiceJpaServletContextListener.mainPersistenceUnit";
+			"pl.morgwai.base.servlet.guiced.jpa.mainPersistenceUnit";
 
 
 

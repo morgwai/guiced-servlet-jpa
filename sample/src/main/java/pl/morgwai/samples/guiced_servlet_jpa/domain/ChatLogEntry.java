@@ -1,5 +1,5 @@
 // Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
-package pl.morgwai.samples.servlet_jpa.domain;
+package pl.morgwai.samples.guiced_servlet_jpa.domain;
 
 import java.io.Serializable;
 

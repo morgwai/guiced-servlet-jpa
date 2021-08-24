@@ -1,5 +1,5 @@
 // Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
-package pl.morgwai.samples.servlet_jpa.servlets;
+package pl.morgwai.samples.guiced_servlet_jpa.servlets;
 
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
@@ -13,9 +13,9 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.Session;
 
 import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
-import pl.morgwai.base.servlet.jpa.JpaServlet;
-import pl.morgwai.samples.servlet_jpa.data_access.ChatLogDao;
-import pl.morgwai.samples.servlet_jpa.domain.ChatLogEntry;
+import pl.morgwai.base.servlet.guiced.jpa.JpaServlet;
+import pl.morgwai.samples.guiced_servlet_jpa.data_access.ChatLogDao;
+import pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry;
 
 
 

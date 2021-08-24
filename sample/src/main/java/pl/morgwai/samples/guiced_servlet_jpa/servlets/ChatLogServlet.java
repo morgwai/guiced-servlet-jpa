@@ -1,5 +1,5 @@
 // Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
-package pl.morgwai.samples.servlet_jpa.servlets;
+package pl.morgwai.samples.guiced_servlet_jpa.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,11 +10,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import pl.morgwai.base.servlet.jpa.JpaServletContextListener;
-import pl.morgwai.base.servlet.jpa.SimpleAsyncJpaServlet;
-import pl.morgwai.samples.servlet_jpa.data_access.ChatLogDao;
-import pl.morgwai.samples.servlet_jpa.data_access.DaoException;
-import pl.morgwai.samples.servlet_jpa.domain.ChatLogEntry;
+import pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener;
+import pl.morgwai.base.servlet.guiced.jpa.SimpleAsyncJpaServlet;
+import pl.morgwai.samples.guiced_servlet_jpa.data_access.ChatLogDao;
+import pl.morgwai.samples.guiced_servlet_jpa.data_access.DaoException;
+import pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry;
 
 
 

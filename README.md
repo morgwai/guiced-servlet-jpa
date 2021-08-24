@@ -7,19 +7,19 @@ A few base classes useful when developing [guiced servlets](https://github.com/m
 
 ## SUMMARY
 
-### [SimpleAsyncJpaServlet](src/main/java/pl/morgwai/base/servlet/jpa/SimpleAsyncJpaServlet.java)
+### [SimpleAsyncJpaServlet](src/main/java/pl/morgwai/base/servlet/guiced/jpa/SimpleAsyncJpaServlet.java)
 
 Base class for servlets that do not perform synchronous time consuming operations other than JPA calls.<br/>
 Request handling is dispatched to the app wide [ContextTrackingExecutor](https://github.com/morgwai/guice-context-scopes/blob/master/src/main/java/pl/morgwai/base/guice/scopes/ContextTrackingExecutor.java) associated with persistence unit's JDBC connection pool. This way the total number of server's threads can remain constant and small regardless of the number of concurrent requests, while providing optimal performance.
 
 
-### [JpaServlet](src/main/java/pl/morgwai/base/servlet/jpa/JpaServlet.java)
+### [JpaServlet](src/main/java/pl/morgwai/base/servlet/guiced/jpa/JpaServlet.java)
 
 Base class for servlets that do perform other type(s) of time consuming operations apart from JPA.<br/>
 Mostly just provides some helper methods.
 
 
-### [JpaServletContextListener](src/main/java/pl/morgwai/base/servlet/jpa/JpaServletContextListener.java)
+### [JpaServletContextListener](src/main/java/pl/morgwai/base/servlet/guiced/jpa/JpaServletContextListener.java)
 
 Base class for app's `JpaServletContextListener`. Configures and creates Guice `Injector` and manages lifecycle of persistence unit and its associated [ContextTrackingExecutor](https://github.com/morgwai/guice-context-scopes/blob/master/src/main/java/pl/morgwai/base/guice/scopes/ContextTrackingExecutor.java).
 

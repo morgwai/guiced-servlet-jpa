@@ -1,5 +1,5 @@
 // Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
-package pl.morgwai.samples.servlet_jpa.data_access;
+package pl.morgwai.samples.guiced_servlet_jpa.data_access;
 
 
 
@@ -7,8 +7,8 @@ public interface ExternalService {
 
 	/**
 	 * Binding name for
-	 * {@link pl.morgwai.samples.servlet_jpa.servlets.ServletContextListener#externalServiceExecutor
-	 * associated executor}.
+	 * {@link pl.morgwai.samples.guiced_servlet_jpa.servlets.ServletContextListener
+	 * #externalServiceExecutor associated executor}.
 	 */
 	static final String EXECUTOR_NAME = "externalServiceExecutor";
 

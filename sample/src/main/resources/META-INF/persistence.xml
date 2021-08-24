@@ -11,8 +11,8 @@
 	<persistence-unit name="queryRecordDb" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<non-jta-data-source>jdbc/queryRecordDataSource</non-jta-data-source>
-		<class>pl.morgwai.samples.servlet_jpa.domain.QueryRecord</class>
-		<class>pl.morgwai.samples.servlet_jpa.domain.ChatLogEntry</class>
+		<class>pl.morgwai.samples.guiced_servlet_jpa.domain.QueryRecord</class>
+		<class>pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />

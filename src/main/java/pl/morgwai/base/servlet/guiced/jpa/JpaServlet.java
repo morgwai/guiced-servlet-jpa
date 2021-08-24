@@ -1,5 +1,5 @@
 // Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
-package pl.morgwai.base.servlet.jpa;
+package pl.morgwai.base.servlet.guiced.jpa;
 
 import java.util.concurrent.Callable;
 
@@ -18,7 +18,7 @@ import com.google.inject.name.Names;
 import pl.morgwai.base.guice.scopes.ContextTracker;
 import pl.morgwai.base.servlet.scopes.RequestContext;
 
-import static pl.morgwai.base.servlet.jpa.JpaServletContextListener.*;
+import static pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener.*;
 
 
 

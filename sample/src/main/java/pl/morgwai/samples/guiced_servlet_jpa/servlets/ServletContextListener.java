@@ -1,5 +1,5 @@
 // Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
-package pl.morgwai.samples.servlet_jpa.servlets;
+package pl.morgwai.samples.guiced_servlet_jpa.servlets;
 
 import java.lang.reflect.InvocationHandler;
 import java.util.LinkedList;
@@ -13,16 +13,16 @@ import com.google.inject.Scopes;
 import com.google.inject.name.Names;
 
 import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
+import pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener;
 import pl.morgwai.base.servlet.guiced.utils.EndpointPingerDecorator;
-import pl.morgwai.base.servlet.jpa.JpaServletContextListener;
 import pl.morgwai.base.servlet.scopes.GuiceServerEndpointConfigurator;
 import pl.morgwai.base.servlet.utils.WebsocketPinger;
-import pl.morgwai.samples.servlet_jpa.data_access.ChatLogDao;
-import pl.morgwai.samples.servlet_jpa.data_access.ExternalService;
-import pl.morgwai.samples.servlet_jpa.data_access.ExternalServiceFake;
-import pl.morgwai.samples.servlet_jpa.data_access.JpaChatLogDao;
-import pl.morgwai.samples.servlet_jpa.data_access.JpaQueryRecordDao;
-import pl.morgwai.samples.servlet_jpa.data_access.QueryRecordDao;
+import pl.morgwai.samples.guiced_servlet_jpa.data_access.ChatLogDao;
+import pl.morgwai.samples.guiced_servlet_jpa.data_access.ExternalService;
+import pl.morgwai.samples.guiced_servlet_jpa.data_access.ExternalServiceFake;
+import pl.morgwai.samples.guiced_servlet_jpa.data_access.JpaChatLogDao;
+import pl.morgwai.samples.guiced_servlet_jpa.data_access.JpaQueryRecordDao;
+import pl.morgwai.samples.guiced_servlet_jpa.data_access.QueryRecordDao;
 
 
 

@@ -9,22 +9,22 @@ The websocket app is a simple chat over a websocket that also logs all messages 
 
 ## MAIN CLASSES
 
-### [QueryRecordListServlet](src/main/java/pl/morgwai/samples/servlet_jpa/servlets/QueryRecordListServlet.java) and [ChatLogServlet](src/main/java/pl/morgwai/samples/servlet_jpa/servlets/ChatLogServlet.java)
+### [QueryRecordListServlet](src/main/java/pl/morgwai/samples/guiced_servlet_jpa/servlets/QueryRecordListServlet.java) and [ChatLogServlet](src/main/java/pl/morgwai/samples/servlet_jpa/servlets/ChatLogServlet.java)
 
 Simple <i>"get data from the DB and put it in a response"</i> case servlets extending [SimpleAsyncJpaServlet](../src/main/java/pl/morgwai/base/servlet/jpa/SimpleAsyncJpaServlet.java).
 
 
-### [SaveQueryServlet](src/main/java/pl/morgwai/samples/servlet_jpa/servlets/SaveQueryServlet.java)
+### [SaveQueryServlet](src/main/java/pl/morgwai/samples/guiced_servlet_jpa/servlets/SaveQueryServlet.java)
 
 A servlet that communicates with multiple slow resources that provide synchronous API only (DB via JPA and some external slow service). Dispatches slow operations to injected app wide [ContextTrackingExecutor](https://github.com/morgwai/guice-context-scopes/blob/master/src/main/java/pl/morgwai/base/guice/scopes/ContextTrackingExecutor.java) instances dedicated to each resource. This avoids suspending threads from the server's main pool, while also passes context to threads performing the slow operations and thus preserves request/session scoped objects (`EntityManager` in this case).
 
 
-### [ChatEndpoint](src/main/java/pl/morgwai/samples/servlet_jpa/servlets/ChatEndpoint.java)
+### [ChatEndpoint](src/main/java/pl/morgwai/samples/guiced_servlet_jpa/servlets/ChatEndpoint.java)
 
 A simple <i>"Chat over a websocket"</i> endpoint that dispatches processing of incoming messages to the app wide executor associated with the persistence unit, on which it logs messages to the DB using `EntityManager` from injected Provider (from the same request-scoped binding as servlets).
 
 
-### [ServletContextListener](src/main/java/pl/morgwai/samples/servlet_jpa/servlets/ServletContextListener.java)
+### [ServletContextListener](src/main/java/pl/morgwai/samples/guiced_servlet_jpa/servlets/ServletContextListener.java)
 
 Creates/configures app wide [ContextTrackingExecutor](https://github.com/morgwai/guice-context-scopes/blob/master/src/main/java/pl/morgwai/base/guice/scopes/ContextTrackingExecutor.java) instances
 associated with the external service and JPA, configures injections, adds servlets and endpoints.
@@ -35,7 +35,7 @@ associated with the external service and JPA, configures injections, adds servle
 
 1. Java 11 is required to build the app (newer versions will probably work too).
 1. The app requires an H2 dialect JDBC datasource/connection pool named `jdbc/queryRecordDataSource` to be configured on the server. You can change the dialect in [persistence.xml file](src/main/resources/META-INF/persistence.xml).
-1. Configure DB operation executor thread pool size accordingly to the size of the above connection pool in [ServletContextListener.getMainJpaThreadPoolSize()](src/main/java/pl/morgwai/samples/servlet_jpa/servlets/ServletContextListener.java).
+1. Configure DB operation executor thread pool size accordingly to the size of the above connection pool in [ServletContextListener.getMainJpaThreadPoolSize()](src/main/java/pl/morgwai/samples/guiced_servlet_jpa/servlets/ServletContextListener.java).
 1. After that, issue in the root folder of this sample app repo: `mvn package`
 
 This will produce a Java war in `target` subfolder that can be deployed to any Servlet container such as Jetty or Tomcat.
