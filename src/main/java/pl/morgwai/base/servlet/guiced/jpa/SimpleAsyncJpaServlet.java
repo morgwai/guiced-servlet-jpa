@@ -5,18 +5,12 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.servlet.AsyncContext;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.inject.Key;
-import com.google.inject.name.Names;
-
 import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
-
-import static pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener.*;
 
 
 
@@ -34,10 +28,6 @@ import static pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener.*;
  */
 @SuppressWarnings("serial")
 public abstract class SimpleAsyncJpaServlet extends JpaServlet {
-
-
-
-	protected ContextTrackingExecutor jpaExecutor;
 
 
 
@@ -70,17 +60,6 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 				asyncCtx.complete();
 			}
 		});
-	}
-
-
-
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		jpaExecutor = singlePersistenceUnitApp
-			? INJECTOR.getInstance(ContextTrackingExecutor.class)
-			: INJECTOR.getInstance(Key.get(
-					ContextTrackingExecutor.class, Names.named(getPersistenceUnitBindingName())));
 	}
 
 

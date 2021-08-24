@@ -38,9 +38,6 @@ public class SaveQueryServlet extends JpaServlet {
 	QueryRecordDao dao;
 
 	@Inject
-	ContextTrackingExecutor jpaExecutor;
-
-	@Inject
 	ExternalService externalService;
 
 	@Inject @Named(ExternalService.EXECUTOR_NAME)

@@ -16,6 +16,7 @@ import com.google.inject.Key;
 import com.google.inject.name.Names;
 
 import pl.morgwai.base.guice.scopes.ContextTracker;
+import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
 import pl.morgwai.base.servlet.scopes.RequestContext;
 
 import static pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener.*;
@@ -41,9 +42,17 @@ public abstract class JpaServlet extends HttpServlet {
 	protected Provider<EntityManager> entityManagerProvider;
 
 	/**
-	 * @return binding name of the persistence unit used by {@link #entityManagerProvider}.
-	 * Defaults to {@link JpaServletContextListener#MAIN_PERSISTENCE_UNIT_BINDING_NAME}. If a
-	 * subclass wants to use a different one, it should override this method.
+	 * JPA executor associated with {@link #entityManagerProvider}.
+	 */
+	protected ContextTrackingExecutor jpaExecutor;
+
+	/**
+	 * @return binding name of the persistence unit to be used by {@link #entityManagerProvider}.
+	 * <br/>
+	 * Defaults to {@link JpaServletContextListener#MAIN_PERSISTENCE_UNIT_BINDING_NAME}. If the app
+	 * uses multiple persistence units
+	 * ({@link JpaServletContextListener#isSinglePersistenceUnitApp()} returns {@code false}) and
+	 * subclass wants to use other than the default, then it should override this method.
 	 */
 	protected String getPersistenceUnitBindingName() {
 		return MAIN_PERSISTENCE_UNIT_BINDING_NAME;
@@ -53,10 +62,14 @@ public abstract class JpaServlet extends HttpServlet {
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-		entityManagerProvider = singlePersistenceUnitApp
-				? INJECTOR.getProvider(EntityManager.class)
-				: INJECTOR.getProvider(
-						Key.get(EntityManager.class, Names.named(getPersistenceUnitBindingName())));
+		if (singlePersistenceUnitApp) {
+			entityManagerProvider = INJECTOR.getProvider(EntityManager.class);
+			jpaExecutor = INJECTOR.getInstance(ContextTrackingExecutor.class);
+		} else {
+			final var bindingName =  Names.named(getPersistenceUnitBindingName());
+			entityManagerProvider = INJECTOR.getProvider(Key.get(EntityManager.class, bindingName));
+			jpaExecutor = INJECTOR.getInstance(Key.get(ContextTrackingExecutor.class, bindingName));
+		}
 	}
 
 
@@ -126,9 +139,10 @@ public abstract class JpaServlet extends HttpServlet {
 	 * use this method before doing so.</p>
 	 */
 	public void removeEntityManagerFromRequestScope() {
-		requestContextTracker.getCurrentContext().removeAttribute(singlePersistenceUnitApp
+		final var entityManagerBindingKey = singlePersistenceUnitApp
 				? Key.get(EntityManager.class)
-				: Key.get(EntityManager.class, Names.named(getPersistenceUnitBindingName())));
+				: Key.get(EntityManager.class, Names.named(getPersistenceUnitBindingName()));
+		requestContextTracker.getCurrentContext().removeAttribute(entityManagerBindingKey);
 	}
 
 	@Inject
