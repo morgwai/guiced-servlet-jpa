@@ -2,7 +2,6 @@
 package pl.morgwai.samples.guiced_servlet_jpa.servlets;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -10,6 +9,9 @@ import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
 import pl.morgwai.base.servlet.guiced.jpa.JpaServlet;
@@ -133,7 +135,7 @@ public class SaveQueryServlet extends JpaServlet {
 
 
 	static void logAndSendError(HttpServletResponse response, Exception e) {
-		log.severe(e.toString());
+		log.error("", e);
 		try {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString());
 		} catch (Exception e1) {}
@@ -141,5 +143,5 @@ public class SaveQueryServlet extends JpaServlet {
 
 
 
-	static final Logger log = Logger.getLogger(SaveQueryServlet.class.getName());
+	static final Logger log = LoggerFactory.getLogger(SaveQueryServlet.class.getName());
 }

@@ -2,13 +2,15 @@
 package pl.morgwai.base.servlet.guiced.jpa;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
 
@@ -44,17 +46,18 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 		jpaExecutor.execute(() -> {
 			try {
 				super.service(asyncRequest, response);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				if (e instanceof IOException) {
-					log.finest("probably just a broken connection: " + e);
+					log.debug("probably just a broken connection", e);
 				} else {
-					log.severe(e.toString());
+					log.error("", e);
 				}
 				if (!response.isCommitted()) {
 					try {
 						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 					} catch (IOException e1) {}  // not even worth log.finest()  ;]
 				}
+				if (e instanceof Error) throw (Error) e;
 			} finally {
 				entityManagerProvider.get().close();
 				asyncCtx.complete();
@@ -64,7 +67,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 
 
 
-	static Logger log = Logger.getLogger(SimpleAsyncJpaServlet.class.getName());
+	static Logger log = LoggerFactory.getLogger(SimpleAsyncJpaServlet.class.getName());
 
 
 

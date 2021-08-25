@@ -2,7 +2,6 @@
 package pl.morgwai.samples.guiced_servlet_jpa.servlets;
 
 import java.util.concurrent.Callable;
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -11,6 +10,9 @@ import javax.websocket.CloseReason;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.Session;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
 import pl.morgwai.base.servlet.guiced.jpa.JpaServlet;
@@ -69,8 +71,7 @@ public class ChatEndpoint extends Endpoint {
 				performInTx(() -> {dao.persist(new ChatLogEntry(nickname, message)); return null;});
 				broadcast(formattedMessageBuilder.toString());
 			} catch (Exception e) {
-				log.warning("couldn't save message from " + connection.getId() + " into the DB: "
-						+ e);
+				log.warn("couldn't save message from " + connection.getId() + " into the DB", e);
 				synchronized (connection) {
 					connection.getAsyncRemote().sendText("### couldn't send message :(");
 				}
@@ -93,8 +94,7 @@ public class ChatEndpoint extends Endpoint {
 
 	@Override
 	public void onError(Session connection, Throwable error) {
-		log.warning("error on connection " + connection.getId() + ": " + error);
-		error.printStackTrace();
+		log.warn("error on connection " + connection.getId(), error);
 	}
 
 
@@ -114,10 +114,10 @@ public class ChatEndpoint extends Endpoint {
 
 	static void shutdown() {
 		isShutdown = true;
-		log.info("ChatEndpoint shutdown completed");
+		log.info("ChatEndpoint shutdown");
 	}
 
 
 
-	static final Logger log = Logger.getLogger(ChatEndpoint.class.getName());
+	static final Logger log = LoggerFactory.getLogger(ChatEndpoint.class.getName());
 }
