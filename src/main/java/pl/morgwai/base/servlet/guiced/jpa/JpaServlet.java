@@ -86,16 +86,6 @@ public abstract class JpaServlet extends HttpServlet {
 
 	/**
 	 * Performs <code>operation</code> in a DB transaction obtained from
-	 * {@link #entityManagerProvider}.
-	 */
-	protected void performInTx(Runnable operation) throws Exception {
-		performInTx(entityManagerProvider, () -> { operation.run(); return null; });
-	}
-
-
-
-	/**
-	 * Performs <code>operation</code> in a DB transaction obtained from
 	 * <code>entityManagerProvider</code>.
 	 */
 	public static <T> T performInTx(
