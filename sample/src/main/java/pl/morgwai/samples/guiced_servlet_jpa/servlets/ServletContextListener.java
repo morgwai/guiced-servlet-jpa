@@ -103,7 +103,7 @@ public class ServletContextListener extends JpaServletContextListener {
 		}
 	}
 
-	WebsocketPinger pinger = new WebsocketPinger();
+	final WebsocketPinger pinger = new WebsocketPinger();
 
 
 
