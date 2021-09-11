@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>pl.morgwai.base</groupId>
 			<artifactId>servlet-scopes</artifactId>
-			<version>1.0-alpha6</version>
+			<version>1.0-alpha7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
