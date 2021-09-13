@@ -73,11 +73,11 @@ public class SaveQueryServlet extends JpaServlet {
 			try {
 				if (idString == null) {
 					record = new QueryRecord(request.getParameter(QueryRecord.QUERY));
-					performInTx(() -> {dao.persist(record); return null;});
+					executeWithinTx(() -> {dao.persist(record); return null;});
 				} else {
 					record = new QueryRecord(
 							Long.valueOf(idString), request.getParameter(QueryRecord.QUERY));
-					boolean updated = performInTx(() -> dao.update(record));
+					boolean updated = executeWithinTx(() -> dao.update(record));
 					if ( ! updated) {
 						// record was deleted in the mean time or its id was invalid
 						response.setHeader("Location", "/" + QueryRecordListServlet.URI);
@@ -116,7 +116,7 @@ public class SaveQueryServlet extends JpaServlet {
 				jpaExecutor.execute(() -> {
 					record.setResult(link);
 					try {
-						performInTx(() -> dao.update(record));
+						executeWithinTx(() -> dao.update(record));
 						// SC_SEE_OTHER is sent instead of dispatching request to make browers's
 						// 'reload' button always safe to use on record list page
 						response.setHeader("Location", "/" + QueryRecordListServlet.URI);

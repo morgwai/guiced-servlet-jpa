@@ -68,7 +68,8 @@ public class ChatEndpoint extends Endpoint {
 		QueryRecordListServlet.appendFiltered(message, formattedMessageBuilder);
 		jpaExecutor.execute(() -> {
 			try {
-				performInTx(() -> {dao.persist(new ChatLogEntry(nickname, message)); return null;});
+				executeWithinTx(
+						() -> { dao.persist(new ChatLogEntry(nickname, message)); return null; });
 				broadcast(formattedMessageBuilder.toString());
 			} catch (Exception e) {
 				log.warn("couldn't save message from " + connection.getId() + " into the DB", e);
@@ -79,8 +80,8 @@ public class ChatEndpoint extends Endpoint {
 		});
 	}
 
-	protected <T> T performInTx(Callable<T> operation) throws Exception {
-		return JpaServlet.performInTx(entityManagerProvider, operation);
+	protected <T> T executeWithinTx(Callable<T> operation) throws Exception {
+		return JpaServlet.executeWithinTx(entityManagerProvider, operation);
 	}
 
 
