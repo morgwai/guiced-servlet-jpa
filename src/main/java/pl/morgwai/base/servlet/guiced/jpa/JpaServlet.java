@@ -24,9 +24,9 @@ import static pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener.*;
 
 
 /**
- * Base class for servlets that perform other type(s) of time consuming operations apart from JPA.
- * Requests injection of an {@link Provider}&lt;{@link EntityManager}&gt; and provides some related
- * helper methods: {@link #executeWithinTx(Callable)},
+ * Base class for servlets that perform other types of time consuming operations apart from JPA.
+ * Requests injection of a {@link Provider}&lt;{@link EntityManager}&gt; and
+ * provides some related helper methods: {@link #executeWithinTx(Callable)},
  * {@link #removeEntityManagerFromRequestScope()}.
  *
  * @see SimpleAsyncJpaServlet
@@ -37,23 +37,30 @@ public abstract class JpaServlet extends HttpServlet {
 
 
 	/**
-	 * Provides request scoped {@link EntityManager} instances obtained from a persistence
-	 * unit determined by {@link #getPersistenceUnitBindingName()}.
+	 * Provides request scoped {@link EntityManager} instances.
+	 * <p>
+	 * If a given app uses multiple persistence units, this provider will use the one indicated by
+	 * {@link #getPersistenceUnitBindingName()}.
 	 */
 	protected Provider<EntityManager> entityManagerProvider;
 
 	/**
 	 * JPA executor associated with {@link #entityManagerProvider}.
+	 * @see JpaServletContextListener
 	 */
 	protected ContextTrackingExecutor jpaExecutor;
 
 	/**
-	 * @return binding name of the persistence unit to be used by {@link #entityManagerProvider}.
-	 * <br/>
-	 * Defaults to {@link JpaServletContextListener#MAIN_PERSISTENCE_UNIT_BINDING_NAME}. If the app
-	 * uses multiple persistence units
-	 * ({@link JpaServletContextListener#isSinglePersistenceUnitApp()} returns {@code false}) and
-	 * subclass wants to use other than the default, then it should override this method.
+	 * Returns injection binding name for {@link #entityManagerProvider} and {@link #jpaExecutor}
+	 * in case a given app uses multiple persistence units.
+	 * <p>
+	 * If the app uses a single persistence unit (default,
+	 * {@link JpaServletContextListener#isSinglePersistenceUnitApp()} is not overridden and returns
+	 * {@code true}) then this method is never used.</p>
+	 * <p>
+	 * By Default returns {@link JpaServletContextListener#MAIN_PERSISTENCE_UNIT_BINDING_NAME}.<br/>
+	 * If an app that uses multiple persistence units needs to use persistence unit other than the
+	 * main in some servlet, then this method should be overridden accordingly in that servlet.</p>
 	 */
 	protected String getPersistenceUnitBindingName() {
 		return MAIN_PERSISTENCE_UNIT_BINDING_NAME;
@@ -61,6 +68,9 @@ public abstract class JpaServlet extends HttpServlet {
 
 
 
+	/**
+	 * Requests instances of {@link #entityManagerProvider} and {@link #jpaExecutor} from Guice.
+	 */
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		if (singlePersistenceUnitApp) {
@@ -76,8 +86,9 @@ public abstract class JpaServlet extends HttpServlet {
 
 
 	/**
-	 * Performs <code>operation</code> in a DB transaction obtained from
-	 * {@link #entityManagerProvider}.
+	 * Executes <code>operation</code> within the DB transaction obtained from
+	 * {@link #entityManagerProvider}. If {@code operation} throws, then the transaction is
+	 * rolled back.
 	 */
 	protected <T> T executeWithinTx(Callable<T> operation) throws Exception {
 		return executeWithinTx(entityManagerProvider, operation);
@@ -86,8 +97,9 @@ public abstract class JpaServlet extends HttpServlet {
 
 
 	/**
-	 * Performs <code>operation</code> in a DB transaction obtained from
-	 * <code>entityManagerProvider</code>.
+	 * Executes <code>operation</code> within the DB transaction obtained from
+	 * <code>entityManagerProvider</code>. If {@code operation} throws, then the transaction is
+	 * rolled back.
 	 */
 	public static <T> T executeWithinTx(
 			Provider<EntityManager> entityManagerProvider, Callable<T> operation) throws Exception {
@@ -107,27 +119,25 @@ public abstract class JpaServlet extends HttpServlet {
 
 
 	/**
-	 * Removes associated {@link EntityManager} from the current request's scope.
+	 * Removes the associated {@link EntityManager} from the scope of the current request.
 	 * <p>
-	 * If your app performs some time consuming operations (such as network communication
+	 * If a given app performs some time consuming operations (such as network communication
 	 * long CPU/GPU intensive computations etc), that need to be surrounded by JPA operations that
-	 * do <b>not</b> need to be a part of the same transaction, like for example:
+	 * do <b>not</b> need to be a part of the same transaction, like for example:</p>
 	 * <pre>
-	 * 	List someRecords = someDbDao.getSomeDataFromDB(); // TX-1 or no TX
-	 * 	SomeClass results = someExternaNetworkConnector.someLongOperation(someRecords);
-	 * 	someDbDao.storeSomeStatsAboutResults(results); // TX-2
-	 * </pre>
-	 * then it may significantly improve your app's performance to close {@link EntityManager}
-	 * after the first (batch of) JPA operation(s). In such case, for the second (batch of) JPA
-	 * operation(s) a new {@link EntityManager} needs to be obtained, so, to prevent
-	 * request-scoped {@link #entityManagerProvider} from reusing the old (closed one), it needs to
-	 * be removed from the scope.</p>
+	 * List someRecords = someDbDao.getSomeDataFromDB(); // TX-1 or no TX
+	 * SomeClass results = someExternaNetworkConnector.someLongOperation(someRecords);
+	 * someDbDao.storeSomeStatsAboutResults(results); // TX-2</pre>
 	 * <p>
-	 * <b>NOTE:</b> this method is safe only if a given request is processed by a single thread
-	 * (which is the most common case).</p>
+	 * then it may significantly improve performance to close the {@link EntityManager} after the
+	 * first (batch of) JPA operation(s) so that other requests may use the underlying connection in
+	 * the mean time.<br/>
+	 * In such case, for the second (batch of) JPA operation(s) a new {@link EntityManager} must be
+	 * obtained. To prevent request-scoped {@link #entityManagerProvider} from reusing the old
+	 * closed one, it needs to be removed from the scope.</p>
 	 * <p>
-	 * Note: most apps don't have such complex processing: make sure you really need to
-	 * use this method before doing so.</p>
+	 * <b>Note:</b> If a request is handled by multiple threads, care must be taken to prevent
+	 * some of them from retaining the old stale instance.</p>
 	 */
 	public void removeEntityManagerFromRequestScope() {
 		final var entityManagerBindingKey = singlePersistenceUnitApp
@@ -136,6 +146,5 @@ public abstract class JpaServlet extends HttpServlet {
 		requestContextTracker.getCurrentContext().removeAttribute(entityManagerBindingKey);
 	}
 
-	@Inject
-	protected ContextTracker<RequestContext> requestContextTracker;
+	@Inject protected ContextTracker<RequestContext> requestContextTracker;
 }

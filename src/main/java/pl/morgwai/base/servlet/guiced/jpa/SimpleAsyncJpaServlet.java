@@ -12,21 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
-
 
 
 /**
- * Base class for servlets that do not perform synchronous time consuming operations
- * other than JPA calls.
- * <p>
- * Request handling is dispatched to the app wide {@link ContextTrackingExecutor JPA executor}
- * associated with persistence unit's JDBC connection pool.
- * This way the total number of server's threads can remain constant and small (<font size='-2'>
- * number of CPU cores available to the process for the main request processing pool + size of the
- * JDBC connection pool for the persistence unit associated executor pool + some constant epsilon
- * for servlet container internals</font>), regardless of the number of concurrent requests, while
- * providing optimal performance.</p>
+ * Base class for servlets that do not perform synchronous time consuming operations other than JPA
+ * calls. Dispatches request handling to the {@link JpaServlet#jpaExecutor JPA executor}.
  */
 @SuppressWarnings("serial")
 public abstract class SimpleAsyncJpaServlet extends JpaServlet {
@@ -34,9 +24,14 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 
 
 	/**
-	 * Dispatches handling of incoming requests to the app wide
-	 * {@link ContextTrackingExecutor JPA executor}.
+	 * Dispatches handling of incoming requests to the {@link JpaServlet#jpaExecutor JPA executor}.
 	 * Closes the associated {@link javax.persistence.EntityManager} at the end.
+	 * <p>
+	 * If the invoked {@code doXXX} method throws, then, unless it's an
+	 * {@link IOException} (indicating broken connection), it's logged at level {@code ERROR} and an
+	 * attempt to send {@link HttpServletResponse#SC_INTERNAL_SERVER_ERROR} is made.<br/>
+	 * {@link IOException}s are logged at level {@code DEBUG}.<br/>
+	 * {@link Error}s are additionally re-thrown after being logged.</p>
 	 */
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)

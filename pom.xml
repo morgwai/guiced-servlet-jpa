@@ -41,13 +41,15 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<servlet.scopes.version>1.0</servlet.scopes.version>
+		<guice.version>5.0.1</guice.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>pl.morgwai.base</groupId>
 			<artifactId>servlet-scopes</artifactId>
-			<version>1.0</version>
+			<version>${servlet.scopes.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -58,7 +60,7 @@
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
-			<version>5.0.1</version>
+			<version>${guice.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -113,6 +115,14 @@
 				<version>3.2.0</version>
 				<configuration>
 					<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+					<links>
+						<link>https://javadoc.io/doc/pl.morgwai.base/guice-context-scopes/1.0</link>
+						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-scopes/${servlet.scopes.version}</link>
+						<link>https://google.github.io/guice/api-docs/${guice.version}/javadoc</link>
+						<link>https://javadoc.io/doc/javax.servlet/javax.servlet-api/4.0.1</link>
+						<link>https://javadoc.io/doc/javax.websocket/javax.websocket-api/1.1</link>
+						<link>https://javadoc.io/doc/javax.persistence/javax.persistence-api/2.2</link>
+					</links>
 				</configuration>
 				<executions>
 					<execution>
