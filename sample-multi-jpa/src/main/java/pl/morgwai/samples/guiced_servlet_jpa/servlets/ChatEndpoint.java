@@ -11,6 +11,7 @@ import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.Session;
 
+import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,9 @@ import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
 import pl.morgwai.base.servlet.guiced.jpa.JpaServlet;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.ChatLogDao;
 import pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry;
+
+import static pl.morgwai.samples.guiced_servlet_jpa.servlets.ServletContextListener
+		.CHAT_LOG_PERSISTENCE_UNIT_NAME;
 
 
 
@@ -42,10 +46,10 @@ public class ChatEndpoint extends Endpoint {
 	@Inject
 	ChatLogDao dao;
 
-	@Inject
+	@Inject @Named(CHAT_LOG_PERSISTENCE_UNIT_NAME)
 	ContextTrackingExecutor jpaExecutor;
 
-	@Inject
+	@Inject @Named(CHAT_LOG_PERSISTENCE_UNIT_NAME)
 	Provider<EntityManager> entityManagerProvider;
 
 

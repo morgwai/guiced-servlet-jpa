@@ -40,6 +40,11 @@ public class ChatLogServlet extends SimpleAsyncJpaServlet {
 
 	@Inject ChatLogDao dao;
 
+	@Override
+	protected String getPersistenceUnitBindingName() {
+		return ServletContextListener.CHAT_LOG_PERSISTENCE_UNIT_NAME;
+	}
+
 
 
 	@Override

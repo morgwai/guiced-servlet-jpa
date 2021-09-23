@@ -106,4 +106,5 @@ public class MyJpaDao implements MyDao {
 
 ## EXAMPLES
 
-See [sample app](sample)
+[Sample app](sample)
+[Almost the same sample app but with multiple persistence units](sample-multi-jpa)

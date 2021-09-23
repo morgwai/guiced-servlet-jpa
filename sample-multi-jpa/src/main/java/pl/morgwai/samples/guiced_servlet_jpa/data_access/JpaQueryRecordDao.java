@@ -8,7 +8,12 @@ import javax.inject.Provider;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import com.google.inject.name.Named;
+
 import pl.morgwai.samples.guiced_servlet_jpa.domain.QueryRecord;
+
+import static pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener
+		.MAIN_PERSISTENCE_UNIT_BINDING_NAME;
 
 
 
@@ -22,8 +27,8 @@ public class JpaQueryRecordDao implements QueryRecordDao {
 
 	@Inject
 	public JpaQueryRecordDao(
-		EntityManagerFactory persistenceUnit,
-		Provider<EntityManager> entityManagerProvider
+		@Named(MAIN_PERSISTENCE_UNIT_BINDING_NAME) EntityManagerFactory persistenceUnit,
+		@Named(MAIN_PERSISTENCE_UNIT_BINDING_NAME) Provider<EntityManager> entityManagerProvider
 	) {
 		this.entityManagerProvider = entityManagerProvider;
 

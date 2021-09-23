@@ -8,7 +8,12 @@ import javax.inject.Provider;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import com.google.inject.name.Named;
+
 import pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry;
+
+import static pl.morgwai.samples.guiced_servlet_jpa.servlets.ServletContextListener
+		.CHAT_LOG_PERSISTENCE_UNIT_NAME;
 
 
 
@@ -22,8 +27,8 @@ public class JpaChatLogDao implements ChatLogDao {
 
 	@Inject
 	public JpaChatLogDao(
-		EntityManagerFactory persistenceUnit,
-		Provider<EntityManager> entityManagerProvider
+		@Named(CHAT_LOG_PERSISTENCE_UNIT_NAME) EntityManagerFactory persistenceUnit,
+		@Named(CHAT_LOG_PERSISTENCE_UNIT_NAME) Provider<EntityManager> entityManagerProvider
 	) {
 		this.entityManagerProvider = entityManagerProvider;
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0 -->
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">
+<Configure class="org.eclipse.jetty.webapp.WebAppContext" id="wac">
+	<Set name="contextPath">/</Set>
+	<Set name="war"><SystemProperty name="jetty.base" default="."/>/guiced-servlet-jpa-sample.war</Set>
+
+	<New id="queryRecordDataSource" class="org.eclipse.jetty.plus.jndi.Resource">
+		<Arg>jdbc/queryRecordDataSource</Arg>
+		<Arg>
+			<Call class="org.h2.jdbcx.JdbcConnectionPool" name="create">
+				<Arg>jdbc:h2:mem:servlet-base-sample-query-records;DB_CLOSE_DELAY=-1</Arg>
+				<Arg>user</Arg>
+				<Arg>password</Arg>
+				<Set name="MaxConnections">10</Set>
+			</Call>
+		</Arg>
+	</New>
+
+	<New id="chatLogDataSource" class="org.eclipse.jetty.plus.jndi.Resource">
+		<Arg>jdbc/chatLogDataSource</Arg>
+		<Arg>
+			<Call class="org.h2.jdbcx.JdbcConnectionPool" name="create">
+				<Arg>jdbc:h2:mem:servlet-base-sample-chat-log;DB_CLOSE_DELAY=-1</Arg>
+				<Arg>user</Arg>
+				<Arg>password</Arg>
+				<Set name="MaxConnections">10</Set>
+			</Call>
+		</Arg>
+	</New>
+</Configure>
