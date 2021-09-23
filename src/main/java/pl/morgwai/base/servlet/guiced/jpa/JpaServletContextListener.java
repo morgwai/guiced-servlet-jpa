@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletException;
 
 import com.google.inject.Module;
 import com.google.inject.name.Names;
@@ -103,11 +104,14 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 
 
 	/**
-	 * Binds injections of the main {@link EntityManagerFactory},
-	 * {@link ContextTrackingExecutor JPA executor} and {@link EntityManager}.
+	 * Calls {@link #configureMoreInjections()} and binds injections of the main
+	 * {@link EntityManagerFactory}, {@link ContextTrackingExecutor JPA executor} and
+	 * {@link EntityManager}.
 	 */
 	@Override
-	protected LinkedList<Module> configureInjections() {
+	protected LinkedList<Module> configureInjections() throws ServletException {
+		var modules = configureMoreInjections();
+
 		singlePersistenceUnitApp = isSinglePersistenceUnitApp();
 		entityManagerFactory = Persistence.createEntityManagerFactory(
 				getMainPersistenceUnitName());
@@ -116,7 +120,6 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 		log.info("entity manager factory " + getMainPersistenceUnitName()
 				+ " and its JPA executor created successfully");
 
-		var modules = new LinkedList<Module>();
 		modules.add((binder) -> {
 			if (singlePersistenceUnitApp) {
 				binder.bind(EntityManager.class)
@@ -141,6 +144,11 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 		});
 		return modules;
 	}
+
+	/**
+	 * See {@link GuiceServletContextListener#configureInjections()}.
+	 */
+	protected abstract LinkedList<Module> configureMoreInjections() throws ServletException;
 
 
 
