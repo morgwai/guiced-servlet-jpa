@@ -16,7 +16,7 @@ import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
 import pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener;
 import pl.morgwai.base.servlet.guiced.utils.EndpointPingerDecorator;
 import pl.morgwai.base.servlet.scopes.GuiceServerEndpointConfigurator;
-import pl.morgwai.base.servlet.utils.WebsocketPinger;
+import pl.morgwai.base.servlet.utils.WebsocketPingerService;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.ChatLogDao;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.ExternalService;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.ExternalServiceFake;
@@ -53,8 +53,8 @@ public class ServletContextListener extends JpaServletContextListener {
 
 
 	@Override
-	protected LinkedList<Module> configureInjections() {
-		var modules = super.configureInjections();
+	protected LinkedList<Module> configureMoreInjections() {
+		var modules = new LinkedList<Module>();
 
 		// external service module
 		externalServiceExecutor = servletModule.newContextTrackingExecutor(
@@ -103,7 +103,7 @@ public class ServletContextListener extends JpaServletContextListener {
 		}
 	}
 
-	final WebsocketPinger pinger = new WebsocketPinger();
+	final WebsocketPingerService pinger = new WebsocketPingerService();
 
 
 
