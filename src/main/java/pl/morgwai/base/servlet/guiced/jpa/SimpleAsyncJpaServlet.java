@@ -16,7 +16,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Base class for servlets that do not perform synchronous time consuming operations other than JPA
- * calls. Dispatches request handling to the {@link JpaServlet#jpaExecutor JPA executor}.
+ * calls. Dispatches request handling to the {@link JpaServlet#jpaExecutor JPA executor} to prevent
+ * requests awaiting for available JDBC connection from blocking server threads. This way the total
+ * number of server's threads can remain constant and small regardless of the number of concurrent
+ * requests, while the JDBC connection pool will be optimally utilized.
  */
 @SuppressWarnings("serial")
 public abstract class SimpleAsyncJpaServlet extends JpaServlet {

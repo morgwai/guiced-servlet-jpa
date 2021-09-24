@@ -45,7 +45,7 @@ public abstract class JpaServlet extends HttpServlet {
 	protected Provider<EntityManager> entityManagerProvider;
 
 	/**
-	 * JPA executor associated with {@link #entityManagerProvider}.
+	 * JPA executor associated with {@link #entityManagerProvider}'s JDBC connection pool.
 	 * @see JpaServletContextListener
 	 */
 	protected ContextTrackingExecutor jpaExecutor;
