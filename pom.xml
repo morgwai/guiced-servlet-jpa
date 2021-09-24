@@ -10,7 +10,7 @@
 
 	<groupId>pl.morgwai.base</groupId>
 	<artifactId>guiced-servlet-jpa</artifactId>
-	<version>1.0</version>
+	<version>1.1-SNAPSHOT</version>
 
 	<name>JPA and guiced servlet integration</name>
 	<description>A few base classes useful when developing guiced servlets performing JPA operations</description>
