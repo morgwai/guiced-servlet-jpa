@@ -2,8 +2,8 @@
 
 A few base classes useful when developing [guiced servlets](https://github.com/morgwai/servlet-scopes) performing JPA operations.<br/>
 <br/>
-**latest release: [1.0-alpha5](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/1.0-alpha5/jar)**
-([javadoc](https://javadoc.io/doc/pl.morgwai.base/guiced-servlet-jpa/1.0-alpha5))
+**latest release: [1.0](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/1.0/jar)**
+([javadoc](https://javadoc.io/doc/pl.morgwai.base/guiced-servlet-jpa/1.0))
 
 
 ## MAIN USER CLASSES
