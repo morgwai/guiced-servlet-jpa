@@ -19,6 +19,9 @@ Mostly just provides some helper methods.
 ### [JpaServletContextListener](src/main/java/pl/morgwai/base/servlet/guiced/jpa/JpaServletContextListener.java)
 Base class for app's `ServletContextListener`. Configures and creates Guice `Injector` and manages lifecycle of persistence unit and its associated [ContextTrackingExecutor](https://github.com/morgwai/guice-context-scopes/blob/master/src/main/java/pl/morgwai/base/guice/scopes/ContextTrackingExecutor.java).
 
+### [SimplePingingEndpointJpaServletContextListener](src/main/java/pl/morgwai/base/servlet/guiced/jpa/SimplePingingEndpointJpaServletContextListener.java)
+Subclass of `JpaServletContextListener` that additionally automatically registers/deregisters created endpoint instances to a [WebsocketPingerService](https://github.com/morgwai/servlet-utils#main-user-classes).
+
 
 ## USAGE
 

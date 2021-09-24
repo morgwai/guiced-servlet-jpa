@@ -116,6 +116,7 @@
 				<configuration>
 					<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
 					<links>
+						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-utils/1.0</link>
 						<link>https://javadoc.io/doc/pl.morgwai.base/guice-context-scopes/1.0</link>
 						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-scopes/${servlet.scopes.version}</link>
 						<link>https://google.github.io/guice/api-docs/${guice.version}/javadoc</link>

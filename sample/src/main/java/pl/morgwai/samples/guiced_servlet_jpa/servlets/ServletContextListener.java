@@ -1,7 +1,6 @@
 // Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
 package pl.morgwai.samples.guiced_servlet_jpa.servlets;
 
-import java.lang.reflect.InvocationHandler;
 import java.util.LinkedList;
 
 import javax.servlet.ServletContextEvent;
@@ -13,10 +12,7 @@ import com.google.inject.Scopes;
 import com.google.inject.name.Names;
 
 import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
-import pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener;
-import pl.morgwai.base.servlet.guiced.utils.EndpointPingerDecorator;
-import pl.morgwai.base.servlet.scopes.GuiceServerEndpointConfigurator;
-import pl.morgwai.base.servlet.utils.WebsocketPingerService;
+import pl.morgwai.base.servlet.guiced.jpa.SimplePingingEndpointJpaServletContextListener;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.ChatLogDao;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.ExternalService;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.ExternalServiceFake;
@@ -27,7 +23,7 @@ import pl.morgwai.samples.guiced_servlet_jpa.data_access.QueryRecordDao;
 
 
 @WebListener
-public class ServletContextListener extends JpaServletContextListener {
+public class ServletContextListener extends SimplePingingEndpointJpaServletContextListener {
 
 
 
@@ -91,25 +87,7 @@ public class ServletContextListener extends JpaServletContextListener {
 
 
 	@Override
-	protected void addEndpoint(Class<?> endpointClass, String path) throws ServletException {
-		super.addEndpoint(endpointClass, path, new SimplePingingEndpointConfigurator());
-	}
-
-	public class SimplePingingEndpointConfigurator extends GuiceServerEndpointConfigurator {
-
-		@Override
-		protected InvocationHandler getAdditionalDecorator(Object endpoint) {
-			return new EndpointPingerDecorator(endpoint, pinger);
-		}
-	}
-
-	final WebsocketPingerService pinger = new WebsocketPingerService();
-
-
-
-	@Override
 	public void contextDestroyed(ServletContextEvent event) {
-		pinger.stop();
 		ChatEndpoint.shutdown();
 
 		// close executors in parallel to speed up the shutdown
