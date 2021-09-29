@@ -14,10 +14,12 @@ import javax.websocket.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
 import pl.morgwai.base.servlet.guiced.jpa.JpaServlet;
+import pl.morgwai.base.servlet.scopes.ContextTrackingExecutor;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.ChatLogDao;
 import pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry;
+
+import static pl.morgwai.samples.guiced_servlet_jpa.servlets.QueryRecordListServlet.appendFiltered;
 
 
 
@@ -33,11 +35,7 @@ public class ChatEndpoint extends Endpoint {
 
 	public static final String PATH = "/websocket/chat";
 
-
-
-	static boolean isShutdown = false;
-
-
+	static volatile boolean isShutdown = false;
 
 	@Inject
 	ChatLogDao dao;
@@ -47,8 +45,6 @@ public class ChatEndpoint extends Endpoint {
 
 	@Inject
 	Provider<EntityManager> entityManagerProvider;
-
-
 
 	String nickname;
 	Session connection;
@@ -60,7 +56,7 @@ public class ChatEndpoint extends Endpoint {
 		this.connection = connection;
 		connection.setMaxIdleTimeout(5l * 60l * 1000l);
 		nickname = "user-" + connection.getId();
-		connection.addMessageHandler(String.class, (message) -> this.onMessage(message));
+		connection.addMessageHandler(String.class, this::onMessage);
 		synchronized (connection) {
 			connection.getAsyncRemote().sendText(String.format(
 					"### assigned nickname: %s", nickname));
@@ -71,11 +67,11 @@ public class ChatEndpoint extends Endpoint {
 
 
 	public void onMessage(String message) {
-		StringBuilder formattedMessageBuilder =
-			new StringBuilder(nickname.length() + message.length() + 10);
-		formattedMessageBuilder.append(nickname).append(": ");
-		QueryRecordListServlet.appendFiltered(message, formattedMessageBuilder);
-		jpaExecutor.execute(() -> {
+		var formattedMessageBuilder = new StringBuilder(nickname.length() + message.length() + 10)
+				.append(nickname)
+				.append(": ");
+		appendFiltered(message, formattedMessageBuilder);
+		jpaExecutor.execute(connection, () -> {
 			try {
 				executeWithinTx(
 						() -> { dao.persist(new ChatLogEntry(nickname, message)); return null; });

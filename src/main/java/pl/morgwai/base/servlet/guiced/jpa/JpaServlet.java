@@ -16,7 +16,7 @@ import com.google.inject.Key;
 import com.google.inject.name.Names;
 
 import pl.morgwai.base.guice.scopes.ContextTracker;
-import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
+import pl.morgwai.base.servlet.scopes.ContextTrackingExecutor;
 import pl.morgwai.base.servlet.scopes.RequestContext;
 
 import static pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener.*;

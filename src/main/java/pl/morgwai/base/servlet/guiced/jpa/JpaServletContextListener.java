@@ -12,7 +12,7 @@ import javax.servlet.ServletException;
 import com.google.inject.Module;
 import com.google.inject.name.Names;
 
-import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
+import pl.morgwai.base.servlet.scopes.ContextTrackingExecutor;
 import pl.morgwai.base.servlet.scopes.GuiceServletContextListener;
 
 

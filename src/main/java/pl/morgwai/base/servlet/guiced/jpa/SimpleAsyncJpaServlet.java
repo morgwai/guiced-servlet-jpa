@@ -41,7 +41,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 			throws ServletException, IOException {
 		AsyncContext asyncCtx = request.startAsync();
 		AsyncHttpServletRequest asyncRequest = new AsyncHttpServletRequest(request);
-		jpaExecutor.execute(() -> {
+		jpaExecutor.execute(response, () -> {
 			try {
 				super.service(asyncRequest, response);
 			} catch (Throwable e) {

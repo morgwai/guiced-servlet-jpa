@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.morgwai.base.guice.scopes.ContextTrackingExecutor;
 import pl.morgwai.base.servlet.guiced.jpa.JpaServlet;
+import pl.morgwai.base.servlet.scopes.ContextTrackingExecutor;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.ExternalService;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.QueryRecordDao;
 import pl.morgwai.samples.guiced_servlet_jpa.domain.QueryRecord;
@@ -67,7 +67,7 @@ public class SaveQueryServlet extends JpaServlet {
 
 		// switch to the threadPool of app wide executor associated with persistence unit's
 		// JDBC connection pool to store the query.
-		jpaExecutor.execute(() -> {
+		jpaExecutor.execute(response, () -> {
 			QueryRecord record;
 			String idString = request.getParameter(QueryRecord.ID);
 			try {
@@ -101,7 +101,7 @@ public class SaveQueryServlet extends JpaServlet {
 
 			// switch to the threadPool associated with externalService to perform a long lasting
 			// call to it
-			externalServiceExecutor.execute(() -> {
+			externalServiceExecutor.execute(response, () -> {
 				String link;
 				try {
 					link = externalService.getLink(record.getQuery());
@@ -113,7 +113,7 @@ public class SaveQueryServlet extends JpaServlet {
 
 				// switch again to the JPA threadPool to update the record with the result.
 				// a new EntityManager (and an underlying JDBC connection) will be assigned
-				jpaExecutor.execute(() -> {
+				jpaExecutor.execute(response, () -> {
 					record.setResult(link);
 					try {
 						executeWithinTx(() -> dao.update(record));
