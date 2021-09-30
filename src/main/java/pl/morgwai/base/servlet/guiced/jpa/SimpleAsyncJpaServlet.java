@@ -15,11 +15,14 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Base class for servlets that do not perform synchronous time consuming operations other than JPA
- * calls. Dispatches request handling to the {@link JpaServlet#jpaExecutor JPA executor} to prevent
- * requests awaiting for available JDBC connection from blocking server threads. This way the total
- * number of server's threads can remain constant and small regardless of the number of concurrent
- * requests, while the JDBC connection pool will be optimally utilized.
+ * Dispatches request handling to {@link JpaServlet#jpaExecutor the executor} associated with the
+ * configured persistence unit.
+ * This prevents requests awaiting for an available JDBC connection from blocking server threads.
+ * This way the total number of server's threads can remain constant and small regardless of the
+ * number of concurrent requests, while the JDBC connection pool will be optimally utilized.
+ * <p>
+ * Base class for servlets that do <b>not</b> perform synchronous time consuming operations other
+ * than JPA calls.</p>
  */
 @SuppressWarnings("serial")
 public abstract class SimpleAsyncJpaServlet extends JpaServlet {
@@ -27,8 +30,8 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 
 
 	/**
-	 * Dispatches handling of incoming requests to the {@link JpaServlet#jpaExecutor JPA executor}.
-	 * Closes the associated {@link javax.persistence.EntityManager} at the end.
+	 * Dispatches request handling to {@link JpaServlet#jpaExecutor}.
+	 * Closes the obtained {@link javax.persistence.EntityManager} at the end.
 	 * <p>
 	 * If the invoked {@code doXXX} method throws, then, unless it's an
 	 * {@link IOException} (indicating broken connection), it's logged at level {@code ERROR} and an
@@ -50,7 +53,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 				} else {
 					log.error("", e);
 				}
-				if (!response.isCommitted()) {
+				if ( ! response.isCommitted()) {
 					try {
 						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 					} catch (IOException e1) {}  // not even worth log.finest()  ;]

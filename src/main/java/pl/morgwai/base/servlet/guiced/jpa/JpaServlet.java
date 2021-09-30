@@ -25,9 +25,9 @@ import static pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener.*;
 
 /**
  * Base class for servlets that perform other types of time consuming operations apart from JPA.
- * Requests injection of a {@link Provider}&lt;{@link EntityManager}&gt; and
- * provides some related helper methods: {@link #executeWithinTx(Callable)},
- * {@link #removeEntityManagerFromRequestScope()}.
+ * Requests injection of a {@link Provider}&lt;{@link EntityManager}&gt;, its associated
+ * {@link #jpaExecutor} and provides some related helper methods:
+ * {@link #executeWithinTx(Callable)}, {@link #removeEntityManagerFromRequestScope()}.
  *
  * @see SimpleAsyncJpaServlet
  */
@@ -40,25 +40,28 @@ public abstract class JpaServlet extends HttpServlet {
 	 * Provides request scoped {@link EntityManager} instances.
 	 * <p>
 	 * If a given app uses multiple persistence units, this provider will use the one indicated by
-	 * {@link #getPersistenceUnitBindingName()}.
+	 * {@link #getPersistenceUnitBindingName()}.</p>
 	 */
 	protected Provider<EntityManager> entityManagerProvider;
 
 	/**
-	 * JPA executor associated with {@link #entityManagerProvider}'s JDBC connection pool.
-	 * @see JpaServletContextListener
+	 * Executor associated with {@link #entityManagerProvider}'s persistence unit.
+	 * <p>
+	 * In apps that use a single persistence unit, this is the same instance as
+	 * {@link JpaServletContextListener#jpaExecutor}. Otherwise, the one indicated by
+	 * {@link #getPersistenceUnitBindingName()}.</p>
 	 */
 	protected ContextTrackingExecutor jpaExecutor;
 
 	/**
 	 * Returns injection binding name for {@link #entityManagerProvider} and {@link #jpaExecutor}
-	 * in case a given app uses multiple persistence units.
+	 * in apps that use multiple persistence units.
 	 * <p>
 	 * If the app uses a single persistence unit (default,
 	 * {@link JpaServletContextListener#isSinglePersistenceUnitApp()} is not overridden and returns
 	 * {@code true}) then this method is never used.</p>
 	 * <p>
-	 * By Default returns {@link JpaServletContextListener#MAIN_PERSISTENCE_UNIT_BINDING_NAME}.<br/>
+	 * By default returns {@link JpaServletContextListener#MAIN_PERSISTENCE_UNIT_BINDING_NAME}.<br/>
 	 * If an app that uses multiple persistence units needs to use persistence unit other than the
 	 * main in some servlet, then this method should be overridden accordingly in that servlet.</p>
 	 */
@@ -87,8 +90,8 @@ public abstract class JpaServlet extends HttpServlet {
 
 	/**
 	 * Executes <code>operation</code> within the DB transaction obtained from
-	 * {@link #entityManagerProvider}. If {@code operation} throws, then the transaction is
-	 * rolled back.
+	 * {@link #entityManagerProvider}. If {@code operation} completes normally, commits the
+	 * transaction. Otherwise the transaction is rolled back.
 	 */
 	protected <T> T executeWithinTx(Callable<T> operation) throws Exception {
 		return executeWithinTx(entityManagerProvider, operation);
@@ -98,8 +101,8 @@ public abstract class JpaServlet extends HttpServlet {
 
 	/**
 	 * Executes <code>operation</code> within the DB transaction obtained from
-	 * <code>entityManagerProvider</code>. If {@code operation} throws, then the transaction is
-	 * rolled back.
+	 * <code>entityManagerProvider</code>. If {@code operation} completes normally, commits the
+	 * transaction. Otherwise the transaction is rolled back.
 	 */
 	public static <T> T executeWithinTx(
 			Provider<EntityManager> entityManagerProvider, Callable<T> operation) throws Exception {
@@ -119,7 +122,7 @@ public abstract class JpaServlet extends HttpServlet {
 
 
 	/**
-	 * Removes the associated {@link EntityManager} from the scope of the current request.
+	 * Removes the stored {@link EntityManager} from the scope of the current request.
 	 * <p>
 	 * If a given app performs some time consuming operations (such as network communication
 	 * long CPU/GPU intensive computations etc), that need to be surrounded by JPA operations that
