@@ -84,6 +84,7 @@ public abstract class JpaServlet extends HttpServlet {
 			entityManagerProvider = INJECTOR.getProvider(Key.get(EntityManager.class, bindingName));
 			jpaExecutor = INJECTOR.getInstance(Key.get(ContextTrackingExecutor.class, bindingName));
 		}
+		super.init(config);
 	}
 
 
