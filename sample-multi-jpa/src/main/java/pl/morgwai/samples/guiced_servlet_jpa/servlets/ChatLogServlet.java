@@ -23,7 +23,7 @@ import pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry;
  * {@link SimpleAsyncJpaServlet}. Here in a form of a crappy looking, early '90s style HTML page:
  * please forgive my (lack of) frontend skills ;-]<br/>
  * {@link #doGet(HttpServletRequest, HttpServletResponse) doGet(...)} is executed by a thread from
- * the pool of {@link JpaServletContextListener#jpaExecutor app wide executor associated with
+ * the pool of {@link JpaServletContextListener#mainJpaExecutor app wide executor associated with
  * persistence unit's JDBC connection pool}.
  * This way the total number of server's threads can remain constant and small (<font size='-2'>
  * number of CPU cores available to the process for the main request processing pool + size of the

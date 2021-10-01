@@ -48,7 +48,7 @@ public abstract class JpaServlet extends HttpServlet {
 	 * Executor associated with {@link #entityManagerProvider}'s persistence unit.
 	 * <p>
 	 * In apps that use a single persistence unit, this is the same instance as
-	 * {@link JpaServletContextListener#jpaExecutor}. Otherwise, the one indicated by
+	 * {@link JpaServletContextListener#mainJpaExecutor}. Otherwise, the one indicated by
 	 * {@link #getPersistenceUnitBindingName()}.</p>
 	 */
 	protected ContextTrackingExecutor jpaExecutor;
