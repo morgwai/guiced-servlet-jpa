@@ -70,8 +70,7 @@ public class ServletContextListener extends SimplePingingEndpointJpaServletConte
 		var modules = new LinkedList<Module>();
 
 		chatLogEntityManagerFactory = Persistence.createEntityManagerFactory(CHAT_LOG_NAME);
-		chatLogJpaExecutor = servletModule.newContextTrackingExecutor(
-				CHAT_LOG_NAME + "JpaExecutor", CHAT_LOG_POOL_SIZE);
+		chatLogJpaExecutor = createJpaExecutor(CHAT_LOG_NAME, CHAT_LOG_POOL_SIZE);
 		log.info("entity manager factory " + CHAT_LOG_NAME
 				+ " and its JPA executor created successfully");
 

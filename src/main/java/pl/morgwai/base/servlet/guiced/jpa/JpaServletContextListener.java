@@ -55,6 +55,27 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	 */
 	protected abstract String getMainPersistenceUnitName();
 
+	EntityManagerFactory entityManagerFactory;
+
+
+
+	/**
+	 * Executor associated with {@link #getMainPersistenceUnitName() the main persistence unit}.
+	 * <p>
+	 * All JPA operations on the main persistence unit should be dispatched to this executor to
+	 * avoid blocking server threads when waiting for an available JDBC connection.</p>
+	 * <p>
+	 * ThreadPool size of this executor is determined by {@link #getMainJpaThreadPoolSize()}.</p>
+	 * <p>
+	 * A reference can be obtained by requesting injection of {@link ContextTrackingExecutor}.
+	 * If the app uses multiple persistence units ({@link #isSinglePersistenceUnitApp()} is
+	 * overridden to return {@code false}) then injection points must be annotated with
+	 * {@link com.google.inject.name.Named @Named} similarly to the below:</p>
+	 * <pre>
+	 * &commat;Named(JpaServletContextListener.MAIN_PERSISTENCE_UNIT_BINDING_NAME)</pre>
+	 */
+	protected ContextTrackingExecutor jpaExecutor;
+
 	/**
 	 * Returns the size of the thread pool to be used by {@link #jpaExecutor}.
 	 * <p>
@@ -65,6 +86,28 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	 * will be optimally utilized.</p>
 	 */
 	protected abstract int getMainJpaThreadPoolSize();
+
+	/**
+	 * Creates an executor to be associated with a persistence unit. Used to create
+	 * {@link #jpaExecutor}. Subclasses may override this method to customize executor creation.
+	 * By default returns
+	 * <pre>
+	 * servletModule.newContextTrackingExecutor(
+	 *         persistenceUnitName + JPA_EXECUTOR_NAME_SUFFIX, poolSize);</pre>
+	 */
+	protected ContextTrackingExecutor createJpaExecutor(
+			String persistenceUnitName, int poolSize) {
+		return servletModule.newContextTrackingExecutor(
+				persistenceUnitName + JPA_EXECUTOR_NAME_SUFFIX, poolSize);
+	}
+
+	/**
+	 * Appended to persistence unit name to create associated executor name.
+	 * @see #createJpaExecutor(String, int)
+	 */
+	public static final String JPA_EXECUTOR_NAME_SUFFIX = "JpaExecutor";
+
+
 
 	/**
 	 * Indicates whether this app uses only 1 persistence unit. By default <code>true</code>.
@@ -94,10 +137,9 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	 *
 	 * &commat;Override
 	 * protected LinkedList<Module> configureMoreInjections() {
-	 *     var modules = new LinkedList<Module>();
 	 *     chatLogEntityManagerFactory = Persistence.createEntityManagerFactory(CHAT_LOG_NAME);
-	 *     chatLogJpaExecutor = servletModule.newContextTrackingExecutor(
-	 *             CHAT_LOG_NAME + "JpaExecutor", CHAT_LOG_POOL_SIZE);
+	 *     chatLogJpaExecutor = createJpaExecutor(CHAT_LOG_NAME, CHAT_LOG_POOL_SIZE);
+	 *     var modules = new LinkedList<Module>();
 	 *     modules.add((binder) -&gt; {
 	 *         binder.bind(EntityManager.class)
 	 *                 .annotatedWith(Names.named(CHAT_LOG_NAME))
@@ -127,6 +169,9 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	 */
 	protected boolean isSinglePersistenceUnitApp() { return true; }
 
+	 // stores the result of isSinglePersistenceUnitApp() for JpaServlet to access
+	static boolean singlePersistenceUnitApp;
+
 	/**
 	 * Injection binding name for {@link #getMainPersistenceUnitName() the main persistence unit}
 	 * associated objects in apps that use multiple persistence units.
@@ -146,27 +191,6 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 
 
 	/**
-	 * Executor associated with {@link #getMainPersistenceUnitName() the main persistence unit}.
-	 * <p>
-	 * All JPA operations on the main persistence unit should be dispatched to this executor to
-	 * avoid blocking server threads when waiting for an available JDBC connection.</p>
-	 * <p>
-	 * ThreadPool size of this executor is determined by {@link #getMainJpaThreadPoolSize()}.</p>
-	 * <p>
-	 * A reference can be obtained by requesting injection of {@link ContextTrackingExecutor}.
-	 * If the app uses multiple persistence units ({@link #isSinglePersistenceUnitApp()} is
-	 * overridden to return {@code false}) then injection points must be annotated with
-	 * {@link com.google.inject.name.Named @Named} similarly to the below:</p>
-	 * <pre>
-	 * &commat;Named(JpaServletContextListener.MAIN_PERSISTENCE_UNIT_BINDING_NAME)</pre>
-	 */
-	protected ContextTrackingExecutor jpaExecutor;
-	EntityManagerFactory entityManagerFactory;
-	static boolean singlePersistenceUnitApp;
-
-
-
-	/**
 	 * Calls {@link #configureMoreInjections()} and binds injections of
 	 * {@link EntityManagerFactory}, {@link #jpaExecutor} and {@link EntityManager}s of
 	 * {@link #getMainPersistenceUnitName() the main persistence unit}.
@@ -178,8 +202,7 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 		singlePersistenceUnitApp = isSinglePersistenceUnitApp();
 		entityManagerFactory = Persistence.createEntityManagerFactory(
 				getMainPersistenceUnitName());
-		jpaExecutor = servletModule.newContextTrackingExecutor(
-				getMainPersistenceUnitName() + "JpaExecutor", getMainJpaThreadPoolSize());
+		jpaExecutor = createJpaExecutor(getMainPersistenceUnitName(), getMainJpaThreadPoolSize());
 		log.info("entity manager factory " + getMainPersistenceUnitName()
 				+ " and its JPA executor created successfully");
 
