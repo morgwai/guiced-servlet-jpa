@@ -196,7 +196,7 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	 * {@link #getMainPersistenceUnitName() the main persistence unit}.
 	 */
 	@Override
-	protected LinkedList<Module> configureInjections() throws ServletException {
+	protected final LinkedList<Module> configureInjections() throws ServletException {
 		var modules = configureMoreInjections();
 
 		singlePersistenceUnitApp = isSinglePersistenceUnitApp();
