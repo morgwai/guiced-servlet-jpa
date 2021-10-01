@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>pl.morgwai.base</groupId>
 			<artifactId>guiced-servlet-jpa</artifactId>
-			<version>3.0</version>
+			<version>3.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject</groupId>
