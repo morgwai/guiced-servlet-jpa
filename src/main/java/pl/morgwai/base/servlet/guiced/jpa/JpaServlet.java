@@ -12,6 +12,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
+import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 
@@ -76,13 +77,14 @@ public abstract class JpaServlet extends HttpServlet {
 	 */
 	@Override
 	public void init(ServletConfig config) throws ServletException {
+		Injector injector = getInjector();
 		if (singlePersistenceUnitApp) {
-			entityManagerProvider = INJECTOR.getProvider(EntityManager.class);
-			jpaExecutor = INJECTOR.getInstance(ContextTrackingExecutor.class);
+			entityManagerProvider = injector.getProvider(EntityManager.class);
+			jpaExecutor = injector.getInstance(ContextTrackingExecutor.class);
 		} else {
 			final var bindingName =  Names.named(getPersistenceUnitBindingName());
-			entityManagerProvider = INJECTOR.getProvider(Key.get(EntityManager.class, bindingName));
-			jpaExecutor = INJECTOR.getInstance(Key.get(ContextTrackingExecutor.class, bindingName));
+			entityManagerProvider = injector.getProvider(Key.get(EntityManager.class, bindingName));
+			jpaExecutor = injector.getInstance(Key.get(ContextTrackingExecutor.class, bindingName));
 		}
 		super.init(config);
 	}
