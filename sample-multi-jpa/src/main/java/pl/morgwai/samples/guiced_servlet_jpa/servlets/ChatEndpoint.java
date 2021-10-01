@@ -22,7 +22,7 @@ import pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry;
 
 import static pl.morgwai.samples.guiced_servlet_jpa.servlets.QueryRecordListServlet.appendFiltered;
 import static pl.morgwai.samples.guiced_servlet_jpa.servlets.ServletContextListener
-		.CHAT_LOG_PERSISTENCE_UNIT_NAME;
+		.CHAT_LOG_NAME;
 
 
 
@@ -43,10 +43,10 @@ public class ChatEndpoint extends Endpoint {
 	@Inject
 	ChatLogDao dao;
 
-	@Inject @Named(CHAT_LOG_PERSISTENCE_UNIT_NAME)
+	@Inject @Named(CHAT_LOG_NAME)
 	ContextTrackingExecutor jpaExecutor;
 
-	@Inject @Named(CHAT_LOG_PERSISTENCE_UNIT_NAME)
+	@Inject @Named(CHAT_LOG_NAME)
 	Provider<EntityManager> entityManagerProvider;
 
 	String nickname;

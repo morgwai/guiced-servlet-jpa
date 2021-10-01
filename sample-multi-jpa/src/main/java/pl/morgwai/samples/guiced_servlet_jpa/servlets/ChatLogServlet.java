@@ -42,7 +42,7 @@ public class ChatLogServlet extends SimpleAsyncJpaServlet {
 
 	@Override
 	protected String getPersistenceUnitBindingName() {
-		return ServletContextListener.CHAT_LOG_PERSISTENCE_UNIT_NAME;
+		return ServletContextListener.CHAT_LOG_NAME;
 	}
 
 

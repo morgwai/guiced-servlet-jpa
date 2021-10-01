@@ -58,8 +58,8 @@ public class ServletContextListener extends SimplePingingEndpointJpaServletConte
 
 
 
-	public static final String CHAT_LOG_PERSISTENCE_UNIT_NAME = "chatLogDb";
-	public static final int CHAT_LOG_DB_CONNECTION_POOL_SIZE = 10;
+	public static final String CHAT_LOG_NAME = "chatLogDb";
+	public static final int CHAT_LOG_POOL_SIZE = 10;
 	EntityManagerFactory chatLogEntityManagerFactory;
 	ContextTrackingExecutor chatLogJpaExecutor;
 
@@ -69,24 +69,23 @@ public class ServletContextListener extends SimplePingingEndpointJpaServletConte
 	protected LinkedList<Module> configureMoreInjections() {
 		var modules = new LinkedList<Module>();
 
-		chatLogEntityManagerFactory = Persistence.createEntityManagerFactory(
-				CHAT_LOG_PERSISTENCE_UNIT_NAME);
+		chatLogEntityManagerFactory = Persistence.createEntityManagerFactory(CHAT_LOG_NAME);
 		chatLogJpaExecutor = servletModule.newContextTrackingExecutor(
-				CHAT_LOG_PERSISTENCE_UNIT_NAME + "JpaExecutor", CHAT_LOG_DB_CONNECTION_POOL_SIZE);
-		log.info("entity manager factory " + CHAT_LOG_PERSISTENCE_UNIT_NAME
+				CHAT_LOG_NAME + "JpaExecutor", CHAT_LOG_POOL_SIZE);
+		log.info("entity manager factory " + CHAT_LOG_NAME
 				+ " and its JPA executor created successfully");
 
 		// chatLogDB module
 		modules.add((binder) -> {
 			binder.bind(EntityManager.class)
-					.annotatedWith(Names.named(CHAT_LOG_PERSISTENCE_UNIT_NAME))
+					.annotatedWith(Names.named(CHAT_LOG_NAME))
 					.toProvider(() -> chatLogEntityManagerFactory.createEntityManager())
 					.in(servletModule.requestScope);
 			binder.bind(EntityManagerFactory.class)
-					.annotatedWith(Names.named(CHAT_LOG_PERSISTENCE_UNIT_NAME))
+					.annotatedWith(Names.named(CHAT_LOG_NAME))
 					.toInstance(chatLogEntityManagerFactory);
 			binder.bind(ContextTrackingExecutor.class)
-					.annotatedWith(Names.named(CHAT_LOG_PERSISTENCE_UNIT_NAME))
+					.annotatedWith(Names.named(CHAT_LOG_NAME))
 					.toInstance(chatLogJpaExecutor);
 		});
 
@@ -136,7 +135,7 @@ public class ServletContextListener extends SimplePingingEndpointJpaServletConte
 		Thread chatLogFinalizer = new Thread(() -> {
 			chatLogJpaExecutor.tryShutdownGracefully(5);
 			chatLogEntityManagerFactory.close();
-			log.info("entity manager factory " + CHAT_LOG_PERSISTENCE_UNIT_NAME
+			log.info("entity manager factory " + CHAT_LOG_NAME
 					+ " shutdown completed");
 		});
 		chatLogFinalizer.start();
