@@ -127,15 +127,13 @@ public class ServletContextListener extends SimplePingingEndpointJpaServletConte
 		ChatEndpoint.shutdown();
 
 		// close executors in parallel to speed up the shutdown
-		Thread externalServiceFinalizer = new Thread(() -> {
-			externalServiceExecutor.tryShutdownGracefully(5);
-		});
+		Thread externalServiceFinalizer = new Thread(
+				() -> externalServiceExecutor.tryShutdownGracefully(5));
 		externalServiceFinalizer.start();
 		Thread chatLogFinalizer = new Thread(() -> {
 			chatLogJpaExecutor.tryShutdownGracefully(5);
 			chatLogEntityManagerFactory.close();
-			log.info("entity manager factory " + CHAT_LOG_NAME
-					+ " shutdown completed");
+			log.info("entity manager factory " + CHAT_LOG_NAME + " shutdown completed");
 		});
 		chatLogFinalizer.start();
 
@@ -143,6 +141,6 @@ public class ServletContextListener extends SimplePingingEndpointJpaServletConte
 		try {
 			externalServiceFinalizer.join();
 			chatLogFinalizer.join();
-		} catch (InterruptedException e) {}
+		} catch (InterruptedException ignored) {}
 	}
 }

@@ -93,10 +93,10 @@ public class QueryRecordListServlet extends SimpleAsyncJpaServlet {
 	// github.com/apache/tomcat/blob/trunk/webapps/examples/WEB-INF/classes/util/HTMLFilter.java
 	public static void appendFiltered(String message, StringBuilder target) {
 		if (message == null) return;
-		char content[] = new char[message.length()];
+		char[] content = new char[message.length()];
 		message.getChars(0, message.length(), content, 0);
-		for (int i = 0; i < content.length; i++) {
-			switch (content[i]) {
+		for (char c : content) {
+			switch (c) {
 				case '<':
 					target.append("&lt;");
 					break;
@@ -113,7 +113,7 @@ public class QueryRecordListServlet extends SimpleAsyncJpaServlet {
 					target.append("&apos;");
 					break;
 				default:
-					target.append(content[i]);
+					target.append(c);
 			}
 		}
 	}

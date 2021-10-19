@@ -91,14 +91,13 @@ public class ServletContextListener extends SimplePingingEndpointJpaServletConte
 		ChatEndpoint.shutdown();
 
 		// close executors in parallel to speed up the shutdown
-		Thread externalServiceFinalizer = new Thread(() -> {
-			externalServiceExecutor.tryShutdownGracefully(5);
-		});
+		Thread externalServiceFinalizer = new Thread(
+				() -> externalServiceExecutor.tryShutdownGracefully(5));
 		externalServiceFinalizer.start();
 
 		super.contextDestroyed(event);
 		try {
 			externalServiceFinalizer.join();
-		} catch (InterruptedException e) {}
+		} catch (InterruptedException ignored) {}
 	}
 }

@@ -1,12 +1,9 @@
 // Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
 package pl.morgwai.samples.guiced_servlet_jpa.servlets;
 
-import java.io.IOException;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.AsyncContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -59,8 +56,7 @@ public class SaveQueryServlet extends JpaServlet {
 	 * to the external resource.
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 		// starting on server's main threadPool
 		AsyncContext asyncCtx = request.startAsync();
 		asyncCtx.setTimeout(ASYNC_CTX_TIMEOUT);
@@ -87,7 +83,7 @@ public class SaveQueryServlet extends JpaServlet {
 					}
 				}
 			} catch (Exception e) {
-				logAndSendError(response, e);;
+				logAndSendError(response, e);
 				asyncCtx.complete();
 				return;
 			} finally {
@@ -106,7 +102,7 @@ public class SaveQueryServlet extends JpaServlet {
 				try {
 					link = externalService.getLink(record.getQuery());
 				} catch (Exception e) {
-					logAndSendError(response, e);;
+					logAndSendError(response, e);
 					asyncCtx.complete();
 					return;
 				}
@@ -117,12 +113,12 @@ public class SaveQueryServlet extends JpaServlet {
 					record.setResult(link);
 					try {
 						executeWithinTx(() -> dao.update(record));
-						// SC_SEE_OTHER is sent instead of dispatching request to make browers's
+						// SC_SEE_OTHER is sent instead of dispatching request to make browser's
 						// 'reload' button always safe to use on record list page
 						response.setHeader("Location", "/" + QueryRecordListServlet.URI);
 						response.setStatus(HttpServletResponse.SC_SEE_OTHER);
 					} catch (Exception e) {
-						logAndSendError(response, e);;
+						logAndSendError(response, e);
 					} finally {
 						entityManagerProvider.get().close();
 						asyncCtx.complete();
@@ -138,7 +134,7 @@ public class SaveQueryServlet extends JpaServlet {
 		log.error("", e);
 		try {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString());
-		} catch (Exception e1) {}
+		} catch (Exception ignored) {}
 	}
 
 
