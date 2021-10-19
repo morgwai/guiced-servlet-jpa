@@ -56,7 +56,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 				if ( ! response.isCommitted()) {
 					try {
 						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-					} catch (IOException e1) {}  // not even worth log.finest()  ;]
+					} catch (IOException ignored) {}  // not even worth log.finest()  ;]
 				}
 				if (e instanceof Error) throw (Error) e;
 			} finally {

@@ -132,7 +132,7 @@ public abstract class JpaServlet extends HttpServlet {
 	 * do <b>not</b> need to be a part of the same transaction, like for example:</p>
 	 * <pre>
 	 * List someRecords = someDbDao.getSomeDataFromDB(); // TX-1 or no TX
-	 * SomeClass results = someExternaNetworkConnector.someLongOperation(someRecords);
+	 * SomeClass results = someExternalNetworkConnector.someLongOperation(someRecords);
 	 * someDbDao.storeSomeStatsAboutResults(results); // TX-2</pre>
 	 * <p>
 	 * then it may significantly improve performance to close the {@link EntityManager} after the
