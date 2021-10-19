@@ -33,23 +33,25 @@ associated with the external service and JPA, configures injections, adds servle
 
 ## BUILDING & CONFIGURING FOR DEPLOYMENT
 
-1. Java 11 is required to build the app (newer versions will probably work too).
+1. Java 11 is required to build the app (newer versions will probably work also).
 1. The app requires an H2 dialect JDBC datasource/connection pool named `jdbc/queryRecordDataSource` to be configured on the server. You can change the dialect in [persistence.xml file](src/main/resources/META-INF/persistence.xml).
 1. Configure DB operation executor thread pool size accordingly to the size of the above connection pool in [ServletContextListener.getMainJpaThreadPoolSize()](src/main/java/pl/morgwai/samples/guiced_servlet_jpa/servlets/ServletContextListener.java).
-1. After that, issue in the root folder of this sample app repo: `mvn package`
+1. by default the project is built with maven, if you want to use gradle, run `./generate-build.gradle.sh`
+1. build the project with either `./mvnw package` or `./gradlew build`
 
-This will produce a Java war in `target` subfolder that can be deployed to any Servlet container such as Jetty or Tomcat.
+This will produce a Java war in `target` or `build/libs` subfolder that can be deployed to any Servlet container such as Jetty or Tomcat.
 
 
 
 ## RUNNIG WITH DEMO JETTY CONFIG
 
 The repo contains demo config for Jetty 9.4.x and 10.x.x series in [src/main/jetty folder](src/main/jetty) to try the app:
-1. download Jetty from https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/ and extract it to the folder of choice
+1. download Jetty from https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-home/ and extract it to the folder of choice
+1. export `JETTY_HOME` env var pointing to the above folder: `export JETTY_HOME=/path/to/folder/where/jetty/was/extracted`
 1. issue the following command in the [src/main/jetty folder](src/main/jetty) to add H2 jar (downloaded by Maven during build) to Jetty's classpath: `mkdir -p lib/ext && cd lib/ext && ln -s ~/.m2/repository/com/h2database/h2/1.4.200/h2-1.4.200.jar`
 1. you can tune acceptor, selector and threadPool size numbers in [http-threadpool.ini file](src/main/jetty/start.d/http-threadpool.ini).
-1. export `JETTY_HOME` env var pointing to the above folder: `export JETTY_HOME=/path/to/folder/where/jetty/was/extracted`
-1. issue the following command in [src/main/jetty folder](src/main/jetty) to start Jetty: `java -server -jar ${JETTY_HOME}/start.jar`<br/>
+1. go to `src/main/jetty` subfolder and execute either `ln -s ../../../target/guiced-servlet-jpa-sample-1.0-SNAPSHOT.war guiced-servlet-jpa-sample.war` or `ln -s ../../../build/libs/guiced-servlet-jpa-sample-1.0-SNAPSHOT.war guiced-servlet-jpa-sample.war` depending if you use gradle or maven
+1. issue the following command in [src/main/jetty folder](src/main/jetty) to start Jetty: `java -server -jar ${JETTY_HOME}/start.jar`
 
 You can now point any browser to http://localhost:8080/ to use the app.<br/>
 To stop the server press `ctrl + c` on its console or issue `java -jar ${JETTY_HOME}/start.jar --stop STOP.PORT=8084 STOP.KEY=servlet-jpa-sample` from another console.

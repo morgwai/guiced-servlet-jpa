@@ -1,10 +1,18 @@
 local
 h2-1.4.200.jar
+sample/src/main/jetty/guiced-servlet-jpa-sample.war
+sample-multi-jpa/src/main/jetty/guiced-servlet-jpa-sample.war
 
 # build
 target
+build
+.gradle
+build.gradle
+settings.gradle
 
-# eclipse
+# ide
+.idea
+local.properties
 .project
 .classpath
 .settings
