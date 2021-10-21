@@ -22,7 +22,6 @@ import pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry;
 import static pl.morgwai.samples.guiced_servlet_jpa.servlets.QueryRecordListServlet.appendFiltered;
 
 
-
 /**
  * A simple "Chat over a WebSocket" endpoint that dispatches processing of incoming messages to
  * {@link #jpaExecutor the app wide executor associated with the persistence unit}, on which it logs

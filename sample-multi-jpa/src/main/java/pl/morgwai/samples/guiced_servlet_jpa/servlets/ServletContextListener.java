@@ -79,7 +79,7 @@ public class ServletContextListener extends SimplePingingEndpointJpaServletConte
 			binder.bind(EntityManager.class)
 					.annotatedWith(Names.named(CHAT_LOG_NAME))
 					.toProvider(() -> chatLogEntityManagerFactory.createEntityManager())
-					.in(servletModule.requestScope);
+					.in(servletModule.containerCallScope);
 			binder.bind(EntityManagerFactory.class)
 					.annotatedWith(Names.named(CHAT_LOG_NAME))
 					.toInstance(chatLogEntityManagerFactory);

@@ -106,3 +106,9 @@ public class MyJpaDao implements MyDao {
 
 [Sample app](sample)<br/>
 [Almost the same sample app but with multiple persistence units](sample-multi-jpa)
+
+
+## NOTES ON JAKARTA SUPPORT
+
+Jakarta flavor is currently based on [repackaged version of Guice](https://github.com/GedMarc/GuicedEE-Services) from [GuicedEE project](https://guicedee.com/), that has some [unresolved](https://github.com/GedMarc/GuicedEE-Services/issues/16) [issues](https://github.com/GedMarc/GuicedEE-Services/issues/17). It seems to work ok for simple cases, but should not be considered production ready at this time.<br/>
+`guiced-servlet-jpa` should however work properly with any other jakarta-repackaged build of Guice provided at runtime if and only if the difference from the upstream version is exact renaming of all `javax` references to `jakarta`.

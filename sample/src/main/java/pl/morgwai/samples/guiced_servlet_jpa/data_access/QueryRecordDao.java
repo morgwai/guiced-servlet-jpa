@@ -3,8 +3,6 @@ package pl.morgwai.samples.guiced_servlet_jpa.data_access;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import pl.morgwai.samples.guiced_servlet_jpa.domain.QueryRecord;
 
 
@@ -12,6 +10,6 @@ import pl.morgwai.samples.guiced_servlet_jpa.domain.QueryRecord;
 public interface QueryRecordDao {
 
 	List<QueryRecord> findAll() throws DaoException;
-	boolean update(@Nonnull QueryRecord record) throws DaoException;
-	void persist(@Nonnull QueryRecord record) throws DaoException;
+	boolean update(QueryRecord record) throws DaoException;
+	void persist(QueryRecord record) throws DaoException;
 }

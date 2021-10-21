@@ -144,7 +144,7 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	 *         binder.bind(EntityManager.class)
 	 *                 .annotatedWith(Names.named(CHAT_LOG_NAME))
 	 *                 .toProvider(() -&gt; chatLogEntityManagerFactory.createEntityManager())
-	 *                 .in(servletModule.requestScope);
+	 *                 .in(servletModule.containerCallScope);
 	 *         binder.bind(EntityManagerFactory.class)
 	 *                 .annotatedWith(Names.named(CHAT_LOG_NAME))
 	 *                 .toInstance(chatLogEntityManagerFactory);
@@ -211,7 +211,7 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 			if (singlePersistenceUnitApp) {
 				binder.bind(EntityManager.class)
 					.toProvider(() -> mainEntityManagerFactory.createEntityManager())
-					.in(servletModule.requestScope);
+					.in(servletModule.containerCallScope);
 				binder.bind(EntityManagerFactory.class)
 					.toInstance(mainEntityManagerFactory);
 				binder.bind(ContextTrackingExecutor.class)
@@ -220,7 +220,7 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 				binder.bind(EntityManager.class)
 					.annotatedWith(Names.named(MAIN_PERSISTENCE_UNIT_BINDING_NAME))
 					.toProvider(() -> mainEntityManagerFactory.createEntityManager())
-					.in(servletModule.requestScope);
+					.in(servletModule.containerCallScope);
 				binder.bind(EntityManagerFactory.class)
 					.annotatedWith(Names.named(MAIN_PERSISTENCE_UNIT_BINDING_NAME))
 					.toInstance(mainEntityManagerFactory);

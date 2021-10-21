@@ -3,7 +3,6 @@ package pl.morgwai.base.servlet.guiced.jpa;
 
 import java.util.concurrent.Callable;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -12,13 +11,14 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 
 import pl.morgwai.base.guice.scopes.ContextTracker;
 import pl.morgwai.base.servlet.scopes.ContextTrackingExecutor;
-import pl.morgwai.base.servlet.scopes.RequestContext;
+import pl.morgwai.base.servlet.scopes.ContainerCallContext;
 
 import static pl.morgwai.base.servlet.guiced.jpa.JpaServletContextListener.*;
 
@@ -108,7 +108,8 @@ public abstract class JpaServlet extends HttpServlet {
 	 * transaction. Otherwise the transaction is rolled back.
 	 */
 	public static <T> T executeWithinTx(
-			Provider<EntityManager> entityManagerProvider, Callable<T> operation) throws Exception {
+			Provider<EntityManager> entityManagerProvider, Callable<T> operation)
+			throws Exception {
 		EntityTransaction tx = entityManagerProvider.get().getTransaction();
 		if ( ! tx.isActive()) tx.begin();
 		try {
@@ -149,8 +150,8 @@ public abstract class JpaServlet extends HttpServlet {
 		final var entityManagerBindingKey = singlePersistenceUnitApp
 				? Key.get(EntityManager.class)
 				: Key.get(EntityManager.class, Names.named(getPersistenceUnitBindingName()));
-		requestContextTracker.getCurrentContext().removeAttribute(entityManagerBindingKey);
+		containerCallContextTracker.getCurrentContext().removeAttribute(entityManagerBindingKey);
 	}
 
-	@Inject protected ContextTracker<RequestContext> requestContextTracker;
+	@Inject protected ContextTracker<ContainerCallContext> containerCallContextTracker;
 }

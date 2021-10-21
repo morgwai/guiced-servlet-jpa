@@ -34,6 +34,7 @@ associated with the external service and JPA, configures injections, adds servle
 ## BUILDING & CONFIGURING FOR DEPLOYMENT
 
 1. Java 11 is required to build the app (newer versions will probably work also).
+1. by default `javax` flavor is built, if you want to switch to `jakarta`, run `./jakarta.sh` to replace imports and dependencies.
 1. The app requires an H2 dialect JDBC datasource/connection pool named `jdbc/queryRecordDataSource` to be configured on the server. You can change the dialect in [persistence.xml file](src/main/resources/META-INF/persistence.xml).
 1. Configure DB operation executor thread pool size accordingly to the size of the above connection pool in [ServletContextListener.getMainJpaThreadPoolSize()](src/main/java/pl/morgwai/samples/guiced_servlet_jpa/servlets/ServletContextListener.java).
 1. by default the project is built with maven, if you want to use gradle, run `./generate-build.gradle.sh`
@@ -43,10 +44,10 @@ This will produce a Java war in `target` or `build/libs` subfolder that can be d
 
 
 
-## RUNNIG WITH DEMO JETTY CONFIG
+## RUNNING WITH DEMO JETTY CONFIG
 
-The repo contains demo config for Jetty 9.4.x and 10.x.x series in [src/main/jetty folder](src/main/jetty) to try the app:
-1. download Jetty from https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-home/ and extract it to the folder of choice
+The repo contains demo config for Jetty 10.0.x and 11.0.x series in [src/main/jetty folder](src/main/jetty) to try the app:
+1. download Jetty from https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-home/ and extract it to a folder of choice. Versions `10.0.x` support `javax`, while `11.0.x` support `jakarta`.
 1. export `JETTY_HOME` env var pointing to the above folder: `export JETTY_HOME=/path/to/folder/where/jetty/was/extracted`
 1. issue the following command in the [src/main/jetty folder](src/main/jetty) to add H2 jar (downloaded by Maven during build) to Jetty's classpath: `mkdir -p lib/ext && cd lib/ext && ln -s ~/.m2/repository/com/h2database/h2/1.4.200/h2-1.4.200.jar`
 1. you can tune acceptor, selector and threadPool size numbers in [http-threadpool.ini file](src/main/jetty/start.d/http-threadpool.ini).
