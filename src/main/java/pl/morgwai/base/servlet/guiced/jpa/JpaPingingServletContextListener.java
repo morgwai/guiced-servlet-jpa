@@ -16,14 +16,14 @@ import pl.morgwai.base.servlet.utils.WebsocketPingerService;
  * A {@link JpaServletContextListener} that automatically registers/deregisters endpoint instances
  * to a {@link WebsocketPingerService}. Endpoints need to be created with
  * {@link #addEndpoint(Class, String) addEndpoint(Class, String)} or annotated to use
- * {@link SimplePingingEndpointConfigurator}.
+ * {@link JpaPingingEndpointConfigurator}.
  * <p>
  * <b>NOTE:</b> This listener creates only 1 instance of {@link WebsocketPingerService} and
  * registers all endpoints to it. In case of a huge number of websocket connections, it may be
  * insufficient. A more complex strategy that creates more pingers should be implemented in such
  * case.</p>
  */
-public abstract class SimplePingingEndpointJpaServletContextListener
+public abstract class JpaPingingServletContextListener
 		extends JpaServletContextListener {
 
 
@@ -57,24 +57,32 @@ public abstract class SimplePingingEndpointJpaServletContextListener
 
 
 	/**
-	 * Adds an endpoint using a {@link SimplePingingEndpointConfigurator}.
+	 * Adds an endpoint using a {@link JpaPingingEndpointConfigurator}.
 	 */
 	@Override
 	protected void addEndpoint(Class<?> endpointClass, String path) throws ServletException {
-		super.addEndpoint(endpointClass, path, new SimplePingingEndpointConfigurator());
+		super.addEndpoint(endpointClass, path, new JpaPingingEndpointConfigurator());
 	}
 
 
 
 	/**
 	 * Automatically registers and deregisters created endpoints to the
-	 * {@link WebsocketPingerService} of the {@link SimplePingingEndpointJpaServletContextListener}.
+	 * {@link WebsocketPingerService} of the {@link JpaPingingServletContextListener}.
 	 */
-	public class SimplePingingEndpointConfigurator extends GuiceServerEndpointConfigurator {
+	public static class JpaPingingEndpointConfigurator extends GuiceServerEndpointConfigurator {
 
 		@Override
 		protected InvocationHandler getAdditionalDecorator(Object endpoint) {
-			return new EndpointPingerDecorator(endpoint, pingerService);
+			return new EndpointPingerDecorator(endpoint, staticPingerService);
 		}
 	}
+
+	public JpaPingingServletContextListener() {
+		// ugly hack as PingingEndpointConfigurator must be static in order to be usable as
+		// configurator class in @ServerEndpoint.
+		staticPingerService = pingerService;
+	}
+
+	static WebsocketPingerService staticPingerService;
 }

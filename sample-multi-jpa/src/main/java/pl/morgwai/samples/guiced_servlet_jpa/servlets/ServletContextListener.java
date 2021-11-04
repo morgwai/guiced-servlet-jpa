@@ -14,7 +14,7 @@ import com.google.inject.Module;
 import com.google.inject.Scopes;
 import com.google.inject.name.Names;
 
-import pl.morgwai.base.servlet.guiced.jpa.SimplePingingEndpointJpaServletContextListener;
+import pl.morgwai.base.servlet.guiced.jpa.JpaPingingServletContextListener;
 import pl.morgwai.base.servlet.scopes.ContextTrackingExecutor;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.ChatLogDao;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.ExternalService;
@@ -26,7 +26,7 @@ import pl.morgwai.samples.guiced_servlet_jpa.data_access.QueryRecordDao;
 
 
 @WebListener
-public class ServletContextListener extends SimplePingingEndpointJpaServletContextListener {
+public class ServletContextListener extends JpaPingingServletContextListener {
 
 
 
