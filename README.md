@@ -5,8 +5,8 @@ A few base classes useful when developing [guiced servlets](https://github.com/m
 **latest release: 4.0**<br/>
 [javax flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/4.0-javax/jar)
 ([javadoc](https://javadoc.io/doc/pl.morgwai.base/guiced-servlet-jpa/4.0-javax))<br/>
-[experimental jakarta flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/4.0-jakarta/jar)
-([javadoc](https://javadoc.io/doc/pl.morgwai.base/guiced-servlet-jpa/4.0-jakarta))
+[experimental jakarta flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/4.0-jakarta-experimental/jar)
+([javadoc](https://javadoc.io/doc/pl.morgwai.base/guiced-servlet-jpa/4.0-jakarta-experimental))
 ([see notes](#notes-on-jakarta-support))
 
 
