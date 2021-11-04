@@ -12,8 +12,7 @@ import com.google.inject.name.Named;
 
 import pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry;
 
-import static pl.morgwai.samples.guiced_servlet_jpa.servlets.ServletContextListener
-		.CHAT_LOG_NAME;
+import static pl.morgwai.samples.guiced_servlet_jpa.servlets.ServletContextListener.CHAT_LOG_NAME;
 
 
 

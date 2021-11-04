@@ -117,7 +117,6 @@ public class ServletContextListener extends JpaPingingServletContextListener {
 				"/" + QueryRecordListServlet.URI);
 		addServlet(SaveQueryServlet.class.getSimpleName(), SaveQueryServlet.class,
 				"/" + SaveQueryServlet.URI);
-		addEndpoint(ChatEndpoint.class, ChatEndpoint.PATH);
 	}
 
 

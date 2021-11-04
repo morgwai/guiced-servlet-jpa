@@ -6,14 +6,16 @@ import java.util.concurrent.Callable;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.persistence.EntityManager;
-import javax.websocket.CloseReason;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.morgwai.base.servlet.guiced.jpa.JpaPingingServletContextListener;
 import pl.morgwai.base.servlet.guiced.jpa.JpaServlet;
 import pl.morgwai.base.servlet.scopes.ContextTrackingExecutor;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.ChatLogDao;
@@ -22,13 +24,17 @@ import pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry;
 import static pl.morgwai.samples.guiced_servlet_jpa.servlets.QueryRecordListServlet.appendFiltered;
 
 
+
 /**
  * A simple "Chat over a WebSocket" endpoint that dispatches processing of incoming messages to
  * {@link #jpaExecutor the app wide executor associated with the persistence unit}, on which it logs
  * messages to the DB using {@link EntityManager} from injected {@link #entityManagerProvider
  * Provider} (from the same request-scoped binding as servlets).
  */
-public class ChatEndpoint extends Endpoint {
+@ServerEndpoint(
+		configurator = JpaPingingServletContextListener.JpaPingingEndpointConfigurator.class,
+		value = ChatEndpoint.PATH)
+public class ChatEndpoint {
 
 
 
@@ -50,22 +56,22 @@ public class ChatEndpoint extends Endpoint {
 
 
 
-	@Override
-	public void onOpen(Session connection, EndpointConfig config) {
+	@OnOpen
+	public void onOpen(Session connection) {
 		this.connection = connection;
 		connection.setMaxIdleTimeout(5l * 60l * 1000l);
 		nickname = "user-" + connection.getId();
 		connection.addMessageHandler(String.class, this::onMessage);
 		synchronized (connection) {
-			connection.getAsyncRemote().sendText(String.format(
-					"### assigned nickname: %s", nickname));
+			connection.getAsyncRemote().sendText(
+					String.format("### assigned nickname: %s", nickname));
 		}
 		broadcast(String.format("### %s has joined", nickname));
 	}
 
 
 
-	public void onMessage(String message) {
+	void onMessage(String message) {
 		var formattedMessageBuilder = new StringBuilder(nickname.length() + message.length() + 10)
 				.append(nickname)
 				.append(": ");
@@ -90,15 +96,15 @@ public class ChatEndpoint extends Endpoint {
 
 
 
-	@Override
-	public void onClose(Session connection, CloseReason reason) {
+	@OnClose
+	public void onClose() {
 		broadcast(String.format("### %s has disconnected", nickname));
 	}
 
 
 
-	@Override
-	public void onError(Session connection, Throwable error) {
+	@OnError
+	public void onError(Throwable error) {
 		log.warn("error on connection " + connection.getId(), error);
 	}
 
