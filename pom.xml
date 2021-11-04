@@ -10,7 +10,7 @@
 
 	<groupId>pl.morgwai.base</groupId>
 	<artifactId>guiced-servlet-jpa</artifactId>
-	<version>4.0-SNAPSHOT-javax</version><!--jakarta-->
+	<version>4.0-SNAPSHOT-javax</version><!--jakarta-experimental-->
 
 	<name>JPA and guiced servlet integration</name>
 	<description>A few base classes useful when developing guiced servlets performing JPA operations</description>
@@ -165,11 +165,10 @@
 					<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
 					<links>
 						<!--TODO: get transitive dep version numbers-->
-						<!--<link>https://javadoc.io/doc/pl.morgwai.base/guice-context-scopes/${guice.scopes.version}</link>-->
-						<!--<link>https://javadoc.io/doc/pl.morgwai.base/servlet-utils/${servlet.utils.version}-javax</link>-->
-						<!--<link>https://javadoc.io/doc/pl.morgwai.base/servlet-utils/${servlet.utils.version}-jakarta</link>-->
-						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-scopes/${servlet.scopes.version}-javax</link>
-						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-scopes/${servlet.scopes.version}-jakarta</link>
+						<link>https://javadoc.io/doc/pl.morgwai.base/guice-context-scopes/3.0</link>
+						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-utils/1.2-javax</link><!--jakarta-->
+
+						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-scopes/${servlet.scopes.version}-javax</link><!--jakarta-experimental-->
 						<link>https://google.github.io/guice/api-docs/${guice.version}/javadoc</link>
 						<link>https://javadoc.io/doc/javax.websocket/javax.websocket-api/1.1</link>
 						<link>https://javadoc.io/doc/jakarta.websocket/jakarta.websocket-api/2.0.0</link>
