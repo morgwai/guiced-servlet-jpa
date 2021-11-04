@@ -17,14 +17,8 @@ import pl.morgwai.base.servlet.utils.WebsocketPingerService;
  * to a {@link WebsocketPingerService}. Endpoints need to be created with
  * {@link #addEndpoint(Class, String) addEndpoint(Class, String)} or annotated to use
  * {@link JpaPingingEndpointConfigurator}.
- * <p>
- * <b>NOTE:</b> This listener creates only 1 instance of {@link WebsocketPingerService} and
- * registers all endpoints to it. In case of a huge number of websocket connections, it may be
- * insufficient. A more complex strategy that creates more pingers should be implemented in such
- * case.</p>
  */
-public abstract class JpaPingingServletContextListener
-		extends JpaServletContextListener {
+public abstract class JpaPingingServletContextListener extends JpaServletContextListener {
 
 
 
