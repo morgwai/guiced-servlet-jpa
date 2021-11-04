@@ -52,7 +52,7 @@
 				<dependency>
 					<groupId>pl.morgwai.base</groupId>
 					<artifactId>guiced-servlet-jpa</artifactId>
-					<version>4.0-javax</version>
+					<version>4.1-SNAPSHOT-javax</version>
 				</dependency>
 				<dependency>
 					<groupId>com.google.inject</groupId>
@@ -87,7 +87,7 @@
 				<dependency>
 					<groupId>pl.morgwai.base</groupId>
 					<artifactId>guiced-servlet-jpa</artifactId>
-					<version>4.0-jakarta-experimental</version>
+					<version>4.1-SNAPSHOT-jakarta-experimental</version>
 				</dependency>
 				<dependency>
 					<groupId>com.guicedee.services</groupId>
