@@ -177,6 +177,50 @@
 						<link>https://javadoc.io/doc/javax.persistence/javax.persistence-api/2.2</link>
 						<link>https://javadoc.io/doc/jakarta.persistence/jakarta.persistence-api/3.0.0</link>
 					</links>
+					<offlineLinks>
+						<!-- to setup offline javadoc generation run ./setup-offline-javadocs.sh -->
+						<offlineLink>
+							<url>https://javadoc.io/doc/pl.morgwai.base/guice-context-scopes/3.0</url>
+							<location>${settings.localRepository}/pl/morgwai/base/guice-context-scopes/3.0</location>
+						</offlineLink>
+						<offlineLink>
+							<url>https://javadoc.io/doc/pl.morgwai.base/servlet-utils/1.2-javax</url><!--jakarta-->
+							<location>${settings.localRepository}/pl/morgwai/base/servlet-utils/1.2-javax</location><!--jakarta-->
+						</offlineLink>
+
+						<offlineLink>
+							<url>https://javadoc.io/doc/pl.morgwai.base/servlet-scopes/${servlet.scopes.version}-javax</url><!--jakarta-experimental-->
+							<location>${settings.localRepository}/pl/morgwai/base/servlet-scopes/${servlet.scopes.version}-javax</location><!--jakarta-experimental-->
+						</offlineLink>
+						<offlineLink>
+							<url>https://google.github.io/guice/api-docs/${guice.version}/javadoc</url>
+							<location>${settings.localRepository}/com/google/inject/guice/${guice.version}</location>
+						</offlineLink>
+						<offlineLink>
+							<url>https://javadoc.io/doc/javax.websocket/javax.websocket-api/1.1</url>
+							<location>${settings.localRepository}/javax/websocket/javax.websocket-api/1.1</location>
+						</offlineLink>
+						<offlineLink>
+							<url>https://javadoc.io/doc/jakarta.websocket/jakarta.websocket-api/2.0.0</url>
+							<location>${settings.localRepository}/jakarta/websocket/jakarta.websocket-api/2.0.0</location>
+						</offlineLink>
+						<offlineLink>
+							<url>https://javadoc.io/doc/javax.servlet/javax.servlet-api/4.0.1</url>
+							<location>${settings.localRepository}/javax/servlet/javax.servlet-api/4.0.1</location>
+						</offlineLink>
+						<offlineLink>
+							<url>https://javadoc.io/doc/jakarta.servlet/jakarta.servlet-api/5.0.0</url>
+							<location>${settings.localRepository}/jakarta/servlet/jakarta.servlet-api/5.0.0</location>
+						</offlineLink>
+						<offlineLink>
+							<url>https://javadoc.io/doc/javax.persistence/javax.persistence-api/2.2</url>
+							<location>${settings.localRepository}/javax/persistence/javax.persistence-api/2.2</location>
+						</offlineLink>
+						<offlineLink>
+							<url>https://javadoc.io/doc/jakarta.persistence/jakarta.persistence-api/3.0.0</url>
+							<location>${settings.localRepository}/jakarta/persistence/jakarta.persistence-api/3.0.0</location>
+						</offlineLink>
+					</offlineLinks>
 				</configuration>
 				<executions>
 					<execution>
