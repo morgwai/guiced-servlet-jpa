@@ -3,11 +3,11 @@ package pl.morgwai.base.servlet.guiced.jpa;
 
 import java.io.IOException;
 
-import javax.servlet.AsyncContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 
 	/**
 	 * Dispatches request handling to {@link JpaServlet#jpaExecutor}.
-	 * Closes the obtained {@link javax.persistence.EntityManager} at the end.
+	 * Closes the obtained {@link jakarta.persistence.EntityManager} at the end.
 	 * <p>
 	 * If the invoked {@code doXXX} method throws, then, unless it's an
 	 * {@link IOException} (indicating broken connection), it's logged at level {@code ERROR} and an
