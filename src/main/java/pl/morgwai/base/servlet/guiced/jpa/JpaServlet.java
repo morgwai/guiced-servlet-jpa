@@ -150,7 +150,7 @@ public abstract class JpaServlet extends HttpServlet {
 		final var entityManagerBindingKey = singlePersistenceUnitApp
 				? Key.get(EntityManager.class)
 				: Key.get(EntityManager.class, Names.named(getPersistenceUnitBindingName()));
-		containerCallContextTracker.getCurrentContext().removeAttribute(entityManagerBindingKey);
+		containerCallContextTracker.getCurrentContext().removeScopedObject(entityManagerBindingKey);
 	}
 
 	@Inject protected ContextTracker<ContainerCallContext> containerCallContextTracker;
