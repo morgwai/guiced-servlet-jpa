@@ -49,7 +49,7 @@ public class ServletContextListener extends JpaPingingServletContextListener {
 
 
 	@Override
-	protected LinkedList<Module> configureMoreInjections() {
+	protected LinkedList<Module> configureInjections() {
 		var modules = new LinkedList<Module>();
 
 		// external service module
@@ -88,15 +88,6 @@ public class ServletContextListener extends JpaPingingServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
 		ChatEndpoint.shutdown();
-
-		// close executors in parallel to speed up the shutdown
-		Thread externalServiceFinalizer = new Thread(
-				() -> externalServiceExecutor.tryShutdownGracefully(5));
-		externalServiceFinalizer.start();
-
 		super.contextDestroyed(event);
-		try {
-			externalServiceFinalizer.join();
-		} catch (InterruptedException ignored) {}
 	}
 }

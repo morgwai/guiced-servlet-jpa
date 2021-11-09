@@ -66,7 +66,7 @@ public class ServletContextListener extends JpaPingingServletContextListener {
 
 
 	@Override
-	protected LinkedList<Module> configureMoreInjections() {
+	protected LinkedList<Module> configureInjections() {
 		var modules = new LinkedList<Module>();
 
 		chatLogEntityManagerFactory = Persistence.createEntityManagerFactory(CHAT_LOG_NAME);
@@ -124,22 +124,8 @@ public class ServletContextListener extends JpaPingingServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
 		ChatEndpoint.shutdown();
-
-		// close executors in parallel to speed up the shutdown
-		Thread externalServiceFinalizer = new Thread(
-				() -> externalServiceExecutor.tryShutdownGracefully(5));
-		externalServiceFinalizer.start();
-		Thread chatLogFinalizer = new Thread(() -> {
-			chatLogJpaExecutor.tryShutdownGracefully(5);
-			chatLogEntityManagerFactory.close();
-			log.info("entity manager factory " + CHAT_LOG_NAME + " shutdown completed");
-		});
-		chatLogFinalizer.start();
-
 		super.contextDestroyed(event);
-		try {
-			externalServiceFinalizer.join();
-			chatLogFinalizer.join();
-		} catch (InterruptedException ignored) {}
+		chatLogEntityManagerFactory.close();
+		log.info("entity manager factory " + CHAT_LOG_NAME + " shutdown completed");
 	}
 }

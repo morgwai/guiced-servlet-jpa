@@ -7,8 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletException;
 
+import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.name.Names;
 
@@ -124,7 +124,7 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	 * persistence unit.<br/>
 	 * After that, given persistence unit's {@link EntityManagerFactory}, executor and
 	 * {@link EntityManager} should be bound with the corresponding constant as the value of
-	 * {@link com.google.inject.name.Named @Named} in {@link #configureMoreInjections()} similarly
+	 * {@link com.google.inject.name.Named @Named} in {@link #configureInjections()} similarly
 	 * to the below:</p>
 	 * <pre>
 	 * &commat;Override
@@ -136,7 +136,7 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	 * ContextTrackingExecutor chatLogJpaExecutor;
 	 *
 	 * &commat;Override
-	 * protected LinkedList<Module> configureMoreInjections() {
+	 * protected LinkedList<Module> configureInjections() {
 	 *     chatLogEntityManagerFactory = Persistence.createEntityManagerFactory(CHAT_LOG_NAME);
 	 *     chatLogJpaExecutor = createJpaExecutor(CHAT_LOG_NAME, CHAT_LOG_POOL_SIZE);
 	 *     var modules = new LinkedList<Module>();
@@ -158,10 +158,9 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	 *
 	 * &commat;Override
 	 * public void contextDestroyed(ServletContextEvent event) {
+	 *     // user components shutdowns here...
 	 *     super.contextDestroyed(event);
-	 *     chatLogJpaExecutor.tryShutdownGracefully(5);
 	 *     chatLogEntityManagerFactory.close();
-	 *     // other shutdowns here
 	 * }</pre>
 	 *
 	 * @see <a href='https://github.com/morgwai/guiced-servlet-jpa/tree/master/sample-multi-jpa'>
@@ -191,14 +190,12 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 
 
 	/**
-	 * Calls {@link #configureMoreInjections()} and binds injections of
+	 * Creates injector with an additional module that binds injections of
 	 * {@link EntityManagerFactory}, {@link #mainJpaExecutor} and {@link EntityManager}s of
 	 * {@link #getMainPersistenceUnitName() the main persistence unit}.
 	 */
 	@Override
-	protected final LinkedList<Module> configureInjections() throws ServletException {
-		var modules = configureMoreInjections();
-
+	protected Injector createInjector(LinkedList<Module> modules)  {
 		singlePersistenceUnitApp = isSinglePersistenceUnitApp();
 		mainEntityManagerFactory = Persistence.createEntityManagerFactory(
 				getMainPersistenceUnitName());
@@ -229,13 +226,9 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 					.toInstance(mainJpaExecutor);
 			}
 		});
-		return modules;
-	}
 
-	/**
-	 * See {@link GuiceServletContextListener#configureInjections()}.
-	 */
-	protected abstract LinkedList<Module> configureMoreInjections() throws ServletException;
+		return super.createInjector(modules);
+	}
 
 
 
@@ -244,17 +237,8 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	 */
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
-		mainJpaExecutor.tryShutdownGracefully(getJpaExecutorShutdownSeconds());
+		super.contextDestroyed(event);
 		mainEntityManagerFactory.close();
 		log.info("entity manager factory " + getMainPersistenceUnitName() + " shutdown completed");
-		super.contextDestroyed(event);
 	}
-
-
-
-	/**
-	 * Returns timeout for the shutdown of {@link #mainJpaExecutor}.
-	 * By default 5 seconds, can be overridden if needed.
-	 */
-	protected int getJpaExecutorShutdownSeconds() { return 5; }
 }
