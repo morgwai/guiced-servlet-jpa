@@ -16,6 +16,8 @@ import pl.morgwai.samples.guiced_servlet_jpa.data_access.ChatLogDao;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.DaoException;
 import pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry;
 
+import static pl.morgwai.samples.guiced_servlet_jpa.servlets.QueryRecordListServlet.appendFiltered;
+
 
 
 /**
@@ -68,9 +70,9 @@ public class ChatLogServlet extends SimpleAsyncJpaServlet {
 		for (ChatLogEntry logEntry: log) {
 			StringBuilder recordRowBuilder = new StringBuilder(500);
 			recordRowBuilder.append("<tr><td>").append(logEntry.getId()).append("</td><td>");
-			QueryRecordListServlet.appendFiltered(logEntry.getUsername(), recordRowBuilder);
+			appendFiltered(logEntry.getUsername(), recordRowBuilder);
 			recordRowBuilder.append("</td><td>");
-			QueryRecordListServlet.appendFiltered(logEntry.getMessage(), recordRowBuilder);
+			appendFiltered(logEntry.getMessage(), recordRowBuilder);
 			recordRowBuilder.append("</td></tr>");
 			writer.println(recordRowBuilder.toString());
 		}
