@@ -3,10 +3,10 @@ package pl.morgwai.base.servlet.guiced.jpa;
 
 import java.util.LinkedList;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.servlet.ServletContextEvent;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.servlet.ServletContextEvent;
 
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -22,7 +22,7 @@ import pl.morgwai.base.servlet.scopes.GuiceServletContextListener;
  * associated {@link #mainJpaExecutor executor}.
  * <p>
  * A single subclass must be created and either annotated with
- * {@link javax.servlet.annotation.WebListener @WebListener} or enlisted in <code>web.xml</code>
+ * {@link jakarta.servlet.annotation.WebListener @WebListener} or enlisted in <code>web.xml</code>
  * file in <code>listener</code> element.</p>
  * <p>
  * Components that perform JPA operations (such as DAOs) should request injection of
@@ -39,7 +39,7 @@ import pl.morgwai.base.servlet.scopes.GuiceServletContextListener;
  * Components that need to create named queries as a part of their initialization can request
  * injection of {@link EntityManagerFactory} (with @{@link com.google.inject.name.Named} if app uses
  * multiple persistence units) and create 1 initial {@link EntityManager} instance to create
- * {@link javax.persistence.Query} instances.<br/>
+ * {@link jakarta.persistence.Query} instances.<br/>
  * <b>NOTE:</b> this initial {@link EntityManagerFactory} and {@link EntityManager} instances
  * <b>MUST NOT</b> be retained beyond named queries initialization.
  * Subsequent JPA operations during normal application request processing should happen via properly
