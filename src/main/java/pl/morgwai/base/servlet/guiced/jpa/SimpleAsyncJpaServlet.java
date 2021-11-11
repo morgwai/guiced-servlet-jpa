@@ -4,6 +4,7 @@ package pl.morgwai.base.servlet.guiced.jpa;
 import java.io.IOException;
 
 import javax.servlet.AsyncContext;
+import javax.servlet.AsyncEvent;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -33,7 +34,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 	 * Dispatches request handling to {@link JpaServlet#jpaExecutor}.
 	 * Closes the obtained {@link javax.persistence.EntityManager} at the end.
 	 * <p>
-	 * If the invoked {@code doXXX} method throws, then, unless it's an
+	 * If the invoked {@code doXXX} method throws an exception, then, unless it's an
 	 * {@link IOException} (indicating broken connection), it's logged at level {@code ERROR} and an
 	 * attempt to send {@link HttpServletResponse#SC_INTERNAL_SERVER_ERROR} is made.<br/>
 	 * {@link IOException}s are logged at level {@code DEBUG}.<br/>
@@ -42,8 +43,10 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		AsyncContext asyncCtx = request.startAsync();
-		AsyncHttpServletRequest asyncRequest = new AsyncHttpServletRequest(request);
+		final var asyncCtx = request.startAsync();
+		final var timeout = getAsyncContextTimeout();
+		if (timeout >= 0l) asyncCtx.setTimeout(timeout);
+		final var asyncRequest = new AsyncHttpServletRequest(request);
 		jpaExecutor.execute(response, () -> {
 			try {
 				super.service(asyncRequest, response);
@@ -65,6 +68,22 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 			}
 		});
 	}
+
+	/**
+	 * Returns timeout for {@link AsyncContext#setTimeout(long)}; Negative number indicates that
+	 * {@link AsyncContext#setTimeout(long)} should not be called in which case container default
+	 * will take effect. By default {@code 0} (meaning no timeout).
+	 * <p>
+	 * <b>NOTE:</b> combining non-container threads with {@link AsyncContext} timeout
+	 * mechanism requires proper synchronization between main request processing code (running on
+	 * {@link #jpaExecutor} thread and {@link javax.servlet.AsyncListener#onTimeout(AsyncEvent)}
+	 * (running on container thread) and may result in the main processing code throwing harmless
+	 * exceptions in case of timeouts even if the processing was discontinued
+	 * (for example as of Jetty 10.0.x, if response output was obtained, an interceptor at the end
+	 * of a given {@code doXXX()} method will throw an exception when trying to close it for the 2nd
+	 * time).</p>
+	 */
+	protected long getAsyncContextTimeout() { return 0l; }
 
 
 
