@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * number of concurrent requests, while the JDBC connection pool will be optimally utilized.
  * <p>
  * Base class for servlets that do <b>not</b> perform synchronous time consuming operations other
- * than JPA calls.</p>
+ * than JPA related calls.</p>
  */
 @SuppressWarnings("serial")
 public abstract class SimpleAsyncJpaServlet extends JpaServlet {
@@ -32,7 +32,11 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 
 	/**
 	 * Dispatches request handling to {@link JpaServlet#jpaExecutor}.
-	 * Closes the obtained {@link javax.persistence.EntityManager} at the end.
+	 * Closes the obtained {@link javax.persistence.EntityManager} at the end. By default also calls
+	 * {@link AsyncContext#complete()}: if a subclass wants to dispatch processing back to the
+	 * container via {@link AsyncContext#dispatch(String)} or to another executor, then
+	 * {@link #shouldCallAsyncContextComplete(HttpServletRequest)} should be overridden to return
+	 * {@code false}.
 	 * <p>
 	 * If the invoked {@code doXXX} method throws an exception, then, unless it's an
 	 * {@link IOException} (indicating broken connection), it's logged at level {@code ERROR} and an
@@ -64,7 +68,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 				if (e instanceof Error) throw (Error) e;
 			} finally {
 				entityManagerProvider.get().close();
-				asyncCtx.complete();
+				if (shouldCallAsyncContextComplete(request)) asyncCtx.complete();
 			}
 		});
 	}
@@ -85,9 +89,12 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 	 */
 	protected long getAsyncContextTimeout() { return 0l; }
 
-
-
-	static Logger log = LoggerFactory.getLogger(SimpleAsyncJpaServlet.class.getName());
+	/**
+	 * Whether {@link AsyncContext#complete()} should be called automatically at the end of request
+	 * processing. By default {@code true}. Should be overridden if processing is dispatched back to
+	 * the container via {@link AsyncContext#dispatch(String)} or to another executor,
+	 */
+	protected boolean shouldCallAsyncContextComplete(HttpServletRequest request) { return true; }
 
 
 
@@ -120,4 +127,8 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 
 		public AsyncHttpServletRequest(HttpServletRequest request) { super(request); }
 	}
+
+
+
+	static Logger log = LoggerFactory.getLogger(SimpleAsyncJpaServlet.class.getName());
 }
