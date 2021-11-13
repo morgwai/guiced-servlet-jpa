@@ -47,7 +47,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		final var asyncCtx = request.startAsync();
+		final var asyncCtx = startAsync(request, response);
 		final var timeout = getAsyncContextTimeout();
 		if (timeout >= 0l) asyncCtx.setTimeout(timeout);
 		final var asyncRequest = new AsyncHttpServletRequest(request);
@@ -95,6 +95,16 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 	 * the container via {@link AsyncContext#dispatch(String)} or to another executor,
 	 */
 	protected boolean shouldCallAsyncContextComplete(HttpServletRequest request) { return true; }
+
+	/**
+	 * Starts {@link AsyncContext}. By default calls {@link HttpServletRequest#startAsync()}. Can be
+	 * overridden if {@link
+	 * HttpServletRequest#startAsync(javax.servlet.ServletRequest, javax.servlet.ServletResponse))}
+	 * needs to be used.
+	 */
+	protected AsyncContext startAsync(HttpServletRequest request, HttpServletResponse response) {
+		return request.startAsync();
+	}
 
 
 
