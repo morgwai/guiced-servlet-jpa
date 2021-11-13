@@ -1,6 +1,6 @@
 # JPA and guiced servlet integration
 
-A few base classes useful when developing [guiced servlets](https://github.com/morgwai/servlet-scopes) performing JPA operations.<br/>
+A few base classes useful when developing [guiced servlets](https://github.com/morgwai/servlet-scopes) performing JPA operations on a dedicated executor.<br/>
 <br/>
 **latest release: 6.0**<br/>
 [javax flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/6.0-javax/jar)
