@@ -99,7 +99,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 	/**
 	 * Starts {@link AsyncContext}. By default calls {@link HttpServletRequest#startAsync()}. Can be
 	 * overridden if {@link
-	 * HttpServletRequest#startAsync(javax.servlet.ServletRequest, javax.servlet.ServletResponse))}
+	 * HttpServletRequest#startAsync(javax.servlet.ServletRequest, javax.servlet.ServletResponse)}
 	 * needs to be used.
 	 */
 	protected AsyncContext startAsync(HttpServletRequest request, HttpServletResponse response) {
