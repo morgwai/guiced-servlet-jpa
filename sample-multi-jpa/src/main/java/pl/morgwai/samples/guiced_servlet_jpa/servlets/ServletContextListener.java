@@ -3,12 +3,12 @@ package pl.morgwai.samples.guiced_servlet_jpa.servlets;
 
 import java.util.LinkedList;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebListener;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebListener;
 
 import com.google.inject.Module;
 import com.google.inject.Scopes;

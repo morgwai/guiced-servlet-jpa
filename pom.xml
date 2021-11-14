@@ -10,7 +10,7 @@
 
 	<groupId>pl.morgwai.base</groupId>
 	<artifactId>guiced-servlet-jpa</artifactId>
-	<version>6.1-javax</version><!--jakarta-experimental-->
+	<version>6.1-jakarta-experimental</version>
 
 	<name>JPA and guiced servlet integration</name>
 	<description>A few base classes useful when developing guiced servlets performing JPA operations</description>
@@ -58,7 +58,7 @@
 		<profile>
 			<id>javax</id>
 			<activation>
-				<activeByDefault>true</activeByDefault><!--jakarta:<activeByDefault>false</activeByDefault>-->
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<dependencies>
 				<dependency>
@@ -95,7 +95,7 @@
 		<profile>
 			<id>jakarta</id>
 			<activation>
-				<activeByDefault>false</activeByDefault><!--jakarta:<activeByDefault>true</activeByDefault>-->
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<dependencies>
 				<dependency>
@@ -166,9 +166,9 @@
 					<links>
 						<!--TODO: get transitive dep version numbers-->
 						<link>https://javadoc.io/doc/pl.morgwai.base/guice-context-scopes/3.0</link>
-						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-utils/1.2-javax</link><!--jakarta-->
+						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-utils/1.2-jakarta</link>
 
-						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-scopes/${servlet.scopes.version}-javax</link><!--jakarta-experimental-->
+						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-scopes/${servlet.scopes.version}-jakarta-experimental</link>
 						<link>https://google.github.io/guice/api-docs/${guice.version}/javadoc</link>
 						<link>https://javadoc.io/doc/javax.websocket/javax.websocket-api/1.1</link>
 						<link>https://javadoc.io/doc/jakarta.websocket/jakarta.websocket-api/2.0.0</link>
@@ -184,13 +184,13 @@
 							<location>${settings.localRepository}/pl/morgwai/base/guice-context-scopes/3.0</location>
 						</offlineLink>
 						<offlineLink>
-							<url>https://javadoc.io/doc/pl.morgwai.base/servlet-utils/1.2-javax</url><!--jakarta-->
-							<location>${settings.localRepository}/pl/morgwai/base/servlet-utils/1.2-javax</location><!--jakarta-->
+							<url>https://javadoc.io/doc/pl.morgwai.base/servlet-utils/1.2-jakarta</url>
+							<location>${settings.localRepository}/pl/morgwai/base/servlet-utils/1.2-jakarta</location>
 						</offlineLink>
 
 						<offlineLink>
-							<url>https://javadoc.io/doc/pl.morgwai.base/servlet-scopes/${servlet.scopes.version}-javax</url><!--jakarta-experimental-->
-							<location>${settings.localRepository}/pl/morgwai/base/servlet-scopes/${servlet.scopes.version}-javax</location><!--jakarta-experimental-->
+							<url>https://javadoc.io/doc/pl.morgwai.base/servlet-scopes/${servlet.scopes.version}-jakarta-experimental</url>
+							<location>${settings.localRepository}/pl/morgwai/base/servlet-scopes/${servlet.scopes.version}-jakarta-experimental</location>
 						</offlineLink>
 						<offlineLink>
 							<url>https://google.github.io/guice/api-docs/${guice.version}/javadoc</url>
