@@ -2,12 +2,12 @@
 
 A few base classes useful when developing [guiced servlets](https://github.com/morgwai/servlet-scopes) performing JPA operations on a dedicated executor.<br/>
 <br/>
-**latest release: 6.1**<br/>
-[javax flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/6.1-javax/jar)
-([javadoc](https://javadoc.io/doc/pl.morgwai.base/guiced-servlet-jpa/6.1-javax))<br/>
-[experimental jakarta flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/6.1-jakarta-experimental/jar)
-([javadoc](https://javadoc.io/doc/pl.morgwai.base/guiced-servlet-jpa/6.1-jakarta-experimental))
-([see notes](https://github.com/morgwai/servlet-scopes#notes-on-jakarta-support))
+**latest release: 6.2**<br/>
+[javax flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/6.2-javax/jar)
+([javadoc](https://javadoc.io/doc/pl.morgwai.base/guiced-servlet-jpa/6.2-javax))<br/>
+[jakarta flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/6.2-jakarta/jar)
+(experimental: see [notes](https://github.com/morgwai/servlet-scopes#notes-on-jakarta-support))
+([javadoc](https://javadoc.io/doc/pl.morgwai.base/guiced-servlet-jpa/6.2-jakarta))
 
 
 ## MAIN USER CLASSES
@@ -104,6 +104,13 @@ public class MyJpaDao implements MyDao {
     // more dao stuff here...
 }
 ```
+
+### Dependency management
+
+Similarly to [servlet-scopes](https://github.com/morgwai/servlet-scopes#dependency-management), dependencies of this jar on `slf4j-api` and `guice` are declared with scope `provided`, so that apps can use any versions of these libs with compatible API.<br/>
+Similarly, there are also 2 builds available:
+- build with `shadeddeps` classifier includes `servlet-scopes` with all transitive deps and relocated dependency on `byte-buddy`. To use this build, add `<classifier>shadeddeps</classifier>` to your dependency declaration.
+- "default" build does not include any shaded dependencies and dependency on `servlet-scopes` has scope `provided`. This is useful for apps that also depend on `byte-buddy` and need to save space (`byte-buddy` is over 3MB in size). In particular, `Hibernate` usually contains compatible version of `byte-buddy`.
 
 
 ## EXAMPLES
