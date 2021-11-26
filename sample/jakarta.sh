@@ -1,9 +1,7 @@
 #!/bin/bash
 # Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
 if [ ! -L pom.xml ]; then
-	sed -E -e 's#(\t*).*<!--jakarta:(.*)-->#\1\2#' \
-		-e 's#(.*)javax(.*)<!--jakarta-->#\1jakarta-experimental\2#' \
-		<pom.xml >pom.jakarta.xml &&
+	sed -E -e 's#(\t*).*<!--jakarta:(.*)-->#\1\2#' <pom.xml >pom.jakarta.xml &&
 	mv pom.jakarta.xml pom.xml ;
 fi &&
 

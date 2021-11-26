@@ -20,6 +20,8 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<servlet.scopes.version>6.3</servlet.scopes.version>
+		<guiced-jpa.version>6.2-SNAPSHOT</guiced-jpa.version>
 	</properties>
 
 	<dependencies>
@@ -49,10 +51,54 @@
 				<activeByDefault>true</activeByDefault><!--jakarta:<activeByDefault>false</activeByDefault>-->
 			</activation>
 			<dependencies>
+				<!-- Hibernate includes compatible byte-buddy, so "default" build is used instead of
+					"shadeddeps". This requires to declare dependency on servlet-scopes to include
+					it in the war as it has provided scope in guiced-servlet-jpa -->
 				<dependency>
 					<groupId>pl.morgwai.base</groupId>
 					<artifactId>guiced-servlet-jpa</artifactId>
-					<version>6.2-SNAPSHOT-javax</version>
+					<version>${guiced-jpa.version}-javax</version>
+				</dependency>
+				<dependency>
+					<groupId>pl.morgwai.base</groupId>
+					<artifactId>servlet-scopes</artifactId>
+					<version>${servlet.scopes.version}-javax</version>
+				</dependency>
+				<dependency>
+					<groupId>com.google.inject</groupId>
+					<artifactId>guice</artifactId>
+					<version>5.0.1</version>
+				</dependency>
+				<dependency>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-entitymanager</artifactId>
+					<version>5.6.0.Final</version>
+				</dependency>
+				<dependency>
+					<groupId>javax.servlet</groupId>
+					<artifactId>javax.servlet-api</artifactId>
+					<version>4.0.1</version>
+					<scope>provided</scope>
+				</dependency>
+				<dependency>
+					<groupId>javax.websocket</groupId>
+					<artifactId>javax.websocket-api</artifactId>
+					<version>1.1</version>
+					<scope>provided</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>javax-shadeddeps</id>
+			<!-- This profile uses "shadeddeps" build, so no need to declare dependency on
+				servlet-scopes. This however results in 2 copies of byte-buddy: 1 from Hibernate and
+				2nd relocated inside servlet-scopes -->
+			<dependencies>
+				<dependency>
+					<groupId>pl.morgwai.base</groupId>
+					<artifactId>guiced-servlet-jpa</artifactId>
+					<version>${guiced-jpa.version}-javax</version>
+					<classifier>shadeddeps</classifier>
 				</dependency>
 				<dependency>
 					<groupId>com.google.inject</groupId>
@@ -87,7 +133,12 @@
 				<dependency>
 					<groupId>pl.morgwai.base</groupId>
 					<artifactId>guiced-servlet-jpa</artifactId>
-					<version>6.2-SNAPSHOT-jakarta-experimental</version>
+					<version>${guiced-jpa.version}-jakarta</version>
+				</dependency>
+				<dependency>
+					<groupId>pl.morgwai.base</groupId>
+					<artifactId>servlet-scopes</artifactId>
+					<version>${servlet.scopes.version}-jakarta</version>
 				</dependency>
 				<dependency>
 					<groupId>com.guicedee.services</groupId>
