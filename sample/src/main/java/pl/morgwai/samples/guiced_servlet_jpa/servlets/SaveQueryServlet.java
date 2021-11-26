@@ -1,11 +1,11 @@
 // Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
 package pl.morgwai.samples.guiced_servlet_jpa.servlets;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.servlet.AsyncContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ import pl.morgwai.samples.guiced_servlet_jpa.domain.QueryRecord;
  * {@link ContextTrackingExecutor} instances dedicated to each resource.
  * This avoids suspending threads from the server's main pool, while also passes context to threads
  * performing the slow operations and thus preserves request/session scoped objects
- * ({@link javax.persistence.EntityManager} in this case).
+ * ({@link jakarta.persistence.EntityManager} in this case).
  */
 @SuppressWarnings("serial")
 public class SaveQueryServlet extends JpaServlet {
