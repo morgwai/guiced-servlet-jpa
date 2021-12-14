@@ -107,10 +107,11 @@ public class MyJpaDao implements MyDao {
 
 ### Dependency management
 
-Similarly to [servlet-scopes](https://github.com/morgwai/servlet-scopes#dependency-management), dependencies of this jar on `slf4j-api` and `guice` are declared with scope `provided`, so that apps can use any versions of these libs with compatible API.<br/>
-Similarly, there are also 2 builds available:
-- build with `shadeddeps` classifier includes `servlet-scopes` with all transitive deps and relocated dependency on `byte-buddy`. To use this build, add `<classifier>shadeddeps</classifier>` to your dependency declaration.
-- "default" build does not include any shaded dependencies and dependency on `servlet-scopes` has scope `provided`. This is useful for apps that also depend on `byte-buddy` and need to save space (`byte-buddy` is over 3MB in size). In particular, `Hibernate` usually contains compatible version of `byte-buddy`.
+Similarly to [servlet-scopes](https://github.com/morgwai/servlet-scopes#dependency-management), dependencies of this jar on [guice](https://search.maven.org/artifact/com.google.inject/guice) and [slf4j-api](https://search.maven.org/artifact/org.slf4j/slf4j-api) are declared as optional, so that apps can use any versions of these deps with compatible API.
+
+There are 2 builds available:
+- build with `shadedscopes` classifier includes shaded `servlet-scopes` and its dependencies: `servlet-utils`, `java-utils`, `guice-context-scopes` and relocated [byte-buddy](https://search.maven.org/artifact/net.bytebuddy/byte-buddy).
+- "default" build does not include any shaded dependencies and dependencies on `servlet-scopes` and `byte-buddy` are marked as `optional`. This is useful for apps that also depend on `byte-buddy` and need to save space (`byte-buddy` is over 3MB in size). Note that the version provided by the app needs to be compatible with the version that `servlet-scopes` depends on (in regard to features used by `servlet-scopes`). If this is not the case, then `shadedscopes` build should be used.
 
 
 ## EXAMPLES
