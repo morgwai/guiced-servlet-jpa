@@ -79,11 +79,12 @@ public abstract class JpaServletContextListener extends GuiceServletContextListe
 	/**
 	 * Returns the size of the thread pool to be used by {@link #mainJpaExecutor}.
 	 * <p>
-	 * The value should be the same or slightly bigger than the size of the JDBC connection pool
-	 * referenced in the definition of the persistence unit named
-	 * {@link #getMainPersistenceUnitName()} in <code>persistence.xml</code> file.
-	 * This way scheduled tasks will be obtaining JDBC connections very fast and the connection pool
-	 * will be optimally utilized.</p>
+	 * The value should be determined by load-testing and should <b>not</b> be simply the same as
+	 * the size of the associated  JDBC connection pool, as most JPA implementations perform
+	 * read-only transactions purely in cache, without using a JDBC connection.<br/>
+	 * Setting the value too low will result in underutilization of the connection pool, while
+	 * setting it too big will have no other impact than the cost of creating the threads, which is
+	 * usually negligible on 64bit machines.</p>
 	 */
 	protected abstract int getMainJpaThreadPoolSize();
 

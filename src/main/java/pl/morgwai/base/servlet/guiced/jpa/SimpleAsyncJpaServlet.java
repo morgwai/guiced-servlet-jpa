@@ -19,8 +19,8 @@ import org.slf4j.LoggerFactory;
  * Dispatches request handling to {@link JpaServlet#jpaExecutor the executor} associated with the
  * configured persistence unit.
  * This prevents requests awaiting for an available JDBC connection from blocking server threads.
- * This way the total number of server's threads can remain constant and small regardless of the
- * number of concurrent requests, while the JDBC connection pool will be optimally utilized.
+ * This way the total number of server's threads can remain constant regardless of the number of
+ * concurrent requests.
  * <p>
  * Base class for servlets that do <b>not</b> perform synchronous time consuming operations other
  * than JPA related calls.</p>
