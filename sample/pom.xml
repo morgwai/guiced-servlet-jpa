@@ -21,7 +21,7 @@
 		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<servlet.scopes.version>7.0</servlet.scopes.version>
-		<guiced-jpa.version>7.0-SNAPSHOT</guiced-jpa.version>
+		<guiced-jpa.version>7.0</guiced-jpa.version>
 	</properties>
 
 	<dependencies>
