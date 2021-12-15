@@ -12,7 +12,7 @@
 				<Arg>jdbc:h2:mem:servlet-base-sample-query-records;DB_CLOSE_DELAY=-1</Arg>
 				<Arg>user</Arg>
 				<Arg>password</Arg>
-				<Set name="MaxConnections">10</Set>
+				<Set name="MaxConnections">5</Set>
 			</Call>
 		</Arg>
 	</New>

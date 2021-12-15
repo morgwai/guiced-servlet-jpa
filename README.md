@@ -3,7 +3,7 @@
 A few base classes useful when developing [guiced servlets](https://github.com/morgwai/servlet-scopes) performing JPA operations on a dedicated executor.
 
 Note: on 64bit architecture there's usually no need to use asynchronous style, as creating dozens of thousands of threads is not a problem.<br/>
-Moreover, most JPA implementations perform read-only transactions purely in cache, without using a JDBC connection, so finding the optimal size of a threadPool for executor performing JPA operations is more complicated than just "same as JDBC connection pool" and requires some load-testing.
+Moreover, most JPA implementations perform read-only transactions purely in cache, without using a JDBC connection, so finding the optimal size of a threadPool for executor performing JPA operations is more complicated than just "same as JDBC connection pool" and requires some load-testing at least and preferably real usage statistics.
 
 **latest release: 7.1**<br/>
 [javax flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/7.1-javax/jar)
@@ -17,7 +17,7 @@ Moreover, most JPA implementations perform read-only transactions purely in cach
 
 ### [SimpleAsyncJpaServlet](src/main/java/pl/morgwai/base/servlet/guiced/jpa/SimpleAsyncJpaServlet.java)
 Base class for servlets that do not perform synchronous time consuming operations other than JPA calls.<br/>
-Request handling is dispatched to the app wide [ContextTrackingExecutor](https://github.com/morgwai/guice-context-scopes/blob/master/src/main/java/pl/morgwai/base/guice/scopes/ContextTrackingExecutor.java) associated with persistence unit's JDBC connection pool. This prevents  requests awaiting for available JDBC connection from blocking server threads. This way the total number of server's threads can remain constant and small regardless of the number of concurrent requests, while the JDBC connection pool will be optimally utilized.
+Request handling is dispatched to the app wide [ContextTrackingExecutor](https://github.com/morgwai/guice-context-scopes/blob/master/src/main/java/pl/morgwai/base/guice/scopes/ContextTrackingExecutor.java) associated with persistence unit's JDBC connection pool. This prevents  requests awaiting for available JDBC connection from blocking server threads. This way the total number of server's threads can remain constant regardless of the number of concurrent requests.
 
 ### [JpaServlet](src/main/java/pl/morgwai/base/servlet/guiced/jpa/JpaServlet.java)
 Base class for servlets that perform other types of time consuming operations apart from JPA.<br/>
@@ -71,9 +71,7 @@ public class ServletContextListener extends JpaServletContextListener {
 
     @Override
     protected int getMainJpaThreadPoolSize() {
-        // return the same value as my-persistence-unit's connection pool size. This way threads
-        // from the pool will never have to wait for a JDBC connection to become available
-        return 10;
+        return 10;  // value determined by load-tests
     }
 
     @Override

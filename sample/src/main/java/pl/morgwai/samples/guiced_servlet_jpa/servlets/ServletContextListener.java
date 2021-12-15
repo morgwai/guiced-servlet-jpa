@@ -34,7 +34,7 @@ public class ServletContextListener extends JpaPingingServletContextListener {
 
 	@Override
 	protected int getMainJpaThreadPoolSize() {
-		return 10;  // same as connection pool in src/main/jetty/webapps/servlet-jpa-sample.xml
+		return 10; // few times connectionPool size in src/main/jetty/webapps/servlet-jpa-sample.xml
 	}
 
 
