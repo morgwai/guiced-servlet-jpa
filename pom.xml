@@ -188,8 +188,8 @@
 					<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
 					<links>
 						<!--TODO: get transitive dep version numbers-->
-						<link>https://javadoc.io/doc/pl.morgwai.base/guice-context-scopes/4.0</link>
-						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-utils/1.2-javax</link><!--jakarta-->
+						<link>https://javadoc.io/doc/pl.morgwai.base/guice-context-scopes/5.2</link>
+						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-utils/1.3-javax</link><!--jakarta-->
 
 						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-scopes/${servlet.scopes.version}-javax</link><!--jakarta-->
 						<link>https://google.github.io/guice/api-docs/${guice.version}/javadoc</link>
