@@ -48,7 +48,7 @@
 		<profile>
 			<id>javax</id>
 			<activation>
-				<activeByDefault>true</activeByDefault><!--jakarta:<activeByDefault>false</activeByDefault>-->
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<dependencies>
 				<!-- Hibernate includes compatible byte-buddy, so "default" build is used instead of
@@ -127,7 +127,7 @@
 		<profile>
 			<id>jakarta</id>
 			<activation>
-				<activeByDefault>false</activeByDefault><!--jakarta:<activeByDefault>true</activeByDefault>-->
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<dependencies>
 				<dependency>

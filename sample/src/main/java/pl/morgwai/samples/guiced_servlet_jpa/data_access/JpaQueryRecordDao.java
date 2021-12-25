@@ -3,10 +3,10 @@ package pl.morgwai.samples.guiced_servlet_jpa.data_access;
 
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
 import pl.morgwai.samples.guiced_servlet_jpa.domain.QueryRecord;
 
