@@ -4,7 +4,6 @@ package pl.morgwai.base.servlet.guiced.jpa;
 import java.lang.reflect.InvocationHandler;
 
 import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletException;
 
 import pl.morgwai.base.servlet.guiced.utils.EndpointPingerDecorator;
 import pl.morgwai.base.servlet.scopes.GuiceServerEndpointConfigurator;
@@ -51,11 +50,11 @@ public abstract class JpaPingingServletContextListener extends JpaServletContext
 
 
 	/**
-	 * Adds an endpoint using a {@link JpaPingingEndpointConfigurator}.
+	 * Creates a {@link JpaPingingEndpointConfigurator}.
 	 */
 	@Override
-	protected void addEndpoint(Class<?> endpointClass, String path) throws ServletException {
-		super.addEndpoint(endpointClass, path, new JpaPingingEndpointConfigurator());
+	protected GuiceServerEndpointConfigurator createEndpointConfigurator() {
+		return new JpaPingingEndpointConfigurator();
 	}
 
 
