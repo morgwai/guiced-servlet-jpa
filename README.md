@@ -3,7 +3,7 @@
 A few base classes useful when developing [guiced servlets](https://github.com/morgwai/servlet-scopes) performing JPA operations on a dedicated executor.
 
 Note: on 64bit architecture there's usually no need to use asynchronous style, as creating dozens of thousands of threads is not a problem.<br/>
-Moreover, most JPA implementations perform read-only transactions purely in cache, without using a JDBC connection, so finding the optimal size of a threadPool for executor performing JPA operations is more complicated than just "same as JDBC connection pool" and requires some load-testing at least and preferably real usage statistics.
+Moreover, most JPA implementations perform read-only transactions purely in cache when possible, without acquiring a JDBC connection. Therefore, finding an optimal size of a threadPool for an executor performing JPA operations is more complicated than just "same as the JDBC connection pool". It requires some load-testing at least and preferably real usage statistics.
 
 **latest release: 7.2**<br/>
 [javax flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/7.2-javax/jar)
