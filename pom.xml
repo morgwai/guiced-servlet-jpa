@@ -39,6 +39,11 @@
 		<maven.compiler.release>11</maven.compiler.release>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<servlet.scopes.version>8.0</servlet.scopes.version>
+
+		<!--TODO: get transitive dep version numbers from servlet-scopes-->
+		<guice.scopes.version>6.0</guice.scopes.version>
+		<utils.version>1.9</utils.version>
+		<servlet.utils.version>1.4</servlet.utils.version>
 		<guice.version>5.1.0</guice.version>
 	</properties>
 
@@ -184,10 +189,8 @@
 				<configuration>
 					<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
 					<links>
-						<!--TODO: get transitive dep version numbers-->
-						<link>https://javadoc.io/doc/pl.morgwai.base/guice-context-scopes/6.0</link>
-						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-utils/1.4-javax</link><!--jakarta-->
-
+						<link>https://javadoc.io/doc/pl.morgwai.base/guice-context-scopes/${guice.scopes.version}</link>
+						<link>https://javadoc.io/doc/pl.morgwai.base/java-utils/${utils.version}</link>
 						<link>https://javadoc.io/doc/pl.morgwai.base/servlet-scopes/${servlet.scopes.version}-javax</link><!--jakarta-->
 						<link>https://google.github.io/guice/api-docs/${guice.version}/javadoc</link>
 						<link>https://javadoc.io/doc/javax.websocket/javax.websocket-api/1.1</link>
@@ -200,14 +203,13 @@
 					<offlineLinks>
 						<!-- to setup offline javadoc generation run ./setup-offline-javadocs.sh -->
 						<offlineLink>
-							<url>https://javadoc.io/doc/pl.morgwai.base/guice-context-scopes/6.0</url>
-							<location>${settings.localRepository}/pl/morgwai/base/guice-context-scopes/6.0</location>
+							<url>https://javadoc.io/doc/pl.morgwai.base/guice-context-scopes/${guice.scopes.version}</url>
+							<location>${settings.localRepository}/pl/morgwai/base/guice-context-scopes/${guice.scopes.version}</location>
 						</offlineLink>
 						<offlineLink>
-							<url>https://javadoc.io/doc/pl.morgwai.base/servlet-utils/1.4-javax</url><!--jakarta-->
-							<location>${settings.localRepository}/pl/morgwai/base/servlet-utils/1.4-javax</location><!--jakarta-->
+							<url>https://javadoc.io/doc/pl.morgwai.base/java-utils/${utils.version}</url>
+							<location>${settings.localRepository}/pl/morgwai/base/java-utils/${utils.version}</location>
 						</offlineLink>
-
 						<offlineLink>
 							<url>https://javadoc.io/doc/pl.morgwai.base/servlet-scopes/${servlet.scopes.version}-javax</url><!--jakarta-->
 							<location>${settings.localRepository}/pl/morgwai/base/servlet-scopes/${servlet.scopes.version}-javax</location><!--jakarta-->
