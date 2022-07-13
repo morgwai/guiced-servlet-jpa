@@ -5,12 +5,12 @@ A few base classes useful when developing [guiced servlets](https://github.com/m
 Note: on 64bit architecture there's usually no need to use asynchronous style, as creating dozens of thousands of threads is not a problem.<br/>
 Moreover, most JPA implementations perform read-only transactions purely in cache when possible, without acquiring a JDBC connection. Therefore, finding an optimal size of a threadPool for an executor performing JPA operations is more complicated than just "same as the JDBC connection pool". It requires some load-testing at least and preferably real usage statistics.
 
-**latest release: 8.0**<br/>
-[javax flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/8.0-javax/jar)
-([javadoc](https://javadoc.io/doc/pl.morgwai.base/guiced-servlet-jpa/8.0-javax))<br/>
-[jakarta flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/8.0-jakarta/jar)
+**latest release: 8.1**<br/>
+[javax flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/8.1-javax/jar)
+([javadoc](https://javadoc.io/doc/pl.morgwai.base/guiced-servlet-jpa/8.1-javax))<br/>
+[jakarta flavor](https://search.maven.org/artifact/pl.morgwai.base/guiced-servlet-jpa/8.1-jakarta/jar)
 (experimental: see [notes](https://github.com/morgwai/servlet-scopes#notes-on-jakarta-support))
-([javadoc](https://javadoc.io/doc/pl.morgwai.base/guiced-servlet-jpa/8.0-jakarta))
+([javadoc](https://javadoc.io/doc/pl.morgwai.base/guiced-servlet-jpa/8.1-jakarta))
 
 
 ## MAIN USER CLASSES
