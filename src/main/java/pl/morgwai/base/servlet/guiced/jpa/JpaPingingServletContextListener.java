@@ -1,11 +1,9 @@
 // Copyright (c) Piotr Morgwai Kotarbinski, Licensed under the Apache License, Version 2.0
 package pl.morgwai.base.servlet.guiced.jpa;
 
-import java.lang.reflect.InvocationHandler;
-
 import javax.servlet.ServletContextEvent;
 
-import pl.morgwai.base.servlet.guiced.utils.EndpointPingerDecorator;
+import pl.morgwai.base.servlet.guiced.utils.PingingEndpointConfigurator;
 import pl.morgwai.base.servlet.scopes.GuiceServerEndpointConfigurator;
 import pl.morgwai.base.servlet.utils.WebsocketPingerService;
 
@@ -15,14 +13,18 @@ import pl.morgwai.base.servlet.utils.WebsocketPingerService;
  * A {@link JpaServletContextListener} that automatically registers/deregisters endpoint instances
  * to a {@link WebsocketPingerService}. Endpoints need to be created with
  * {@link #addEndpoint(Class, String) addEndpoint(Class, String)} or annotated to use
- * {@link JpaPingingEndpointConfigurator}.
+ * {@link PingingEndpointConfigurator}.
+ * <p>
+ * This class is almost the same as
+ * {@link pl.morgwai.base.servlet.guiced.utils.PingingServletContextListener}, the only difference
+ * is that it extends {@link JpaServletContextListener}.</p>
  */
 public abstract class JpaPingingServletContextListener extends JpaServletContextListener {
 
 
 
-	final WebsocketPingerService pingerService =
-			new WebsocketPingerService(getPingIntervalSeconds(), getMaxMalformedPongCount());
+	final WebsocketPingerService pingerService = new WebsocketPingerService(
+			getPingIntervalSeconds(), getMaxMalformedPongCount(), shouldSynchronizePingSending());
 
 	/**
 	 * Allows subclasses to override ping interval.
@@ -36,6 +38,30 @@ public abstract class JpaPingingServletContextListener extends JpaServletContext
 		return WebsocketPingerService.DEFAULT_MAX_MALFORMED_PONG_COUNT;
 	}
 
+	/**
+	 * Allows subclasses to override <code>synchronizePingSending</code> flag.
+	 */
+	protected boolean shouldSynchronizePingSending() {
+		return false;
+	}
+
+
+
+	public JpaPingingServletContextListener() {
+		PingingEndpointConfigurator.setPingerService(pingerService);
+	}
+
+
+
+	/**
+	 * Overrides default configurator used by {@link #addEndpoint(Class, String)} to be a
+	 * {@link PingingEndpointConfigurator}.
+	 */
+	@Override
+	protected GuiceServerEndpointConfigurator createEndpointConfigurator() {
+		return new PingingEndpointConfigurator();
+	}
+
 
 
 	/**
@@ -46,36 +72,4 @@ public abstract class JpaPingingServletContextListener extends JpaServletContext
 		pingerService.stop();
 		super.contextDestroyed(destructionEvent);
 	}
-
-
-
-	/**
-	 * Creates a {@link JpaPingingEndpointConfigurator}.
-	 */
-	@Override
-	protected GuiceServerEndpointConfigurator createEndpointConfigurator() {
-		return new JpaPingingEndpointConfigurator();
-	}
-
-
-
-	/**
-	 * Automatically registers and deregisters created endpoints to the
-	 * {@link WebsocketPingerService} of the {@link JpaPingingServletContextListener}.
-	 */
-	public static class JpaPingingEndpointConfigurator extends GuiceServerEndpointConfigurator {
-
-		@Override
-		protected InvocationHandler getAdditionalDecorator(Object endpoint) {
-			return new EndpointPingerDecorator(endpoint, staticPingerService);
-		}
-	}
-
-	public JpaPingingServletContextListener() {
-		// ugly hack as PingingEndpointConfigurator must be static in order to be usable as
-		// configurator class in @ServerEndpoint.
-		staticPingerService = pingerService;
-	}
-
-	static WebsocketPingerService staticPingerService;
 }

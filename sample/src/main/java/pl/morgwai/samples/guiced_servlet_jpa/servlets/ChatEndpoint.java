@@ -15,8 +15,8 @@ import javax.websocket.server.ServerEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.morgwai.base.servlet.guiced.jpa.JpaPingingServletContextListener;
 import pl.morgwai.base.servlet.guiced.jpa.JpaServlet;
+import pl.morgwai.base.servlet.guiced.utils.PingingEndpointConfigurator;
 import pl.morgwai.base.servlet.scopes.ContextTrackingExecutor;
 import pl.morgwai.samples.guiced_servlet_jpa.data_access.ChatLogDao;
 import pl.morgwai.samples.guiced_servlet_jpa.domain.ChatLogEntry;
@@ -32,7 +32,7 @@ import static pl.morgwai.samples.guiced_servlet_jpa.servlets.QueryRecordListServ
  * Provider} (from the same request-scoped binding as servlets).
  */
 @ServerEndpoint(
-		configurator = JpaPingingServletContextListener.JpaPingingEndpointConfigurator.class,
+		configurator = PingingEndpointConfigurator.class,
 		value = ChatEndpoint.PATH)
 public class ChatEndpoint {
 
