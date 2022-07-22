@@ -23,31 +23,50 @@ public abstract class JpaPingingServletContextListener extends JpaServletContext
 
 
 
-	final WebsocketPingerService pingerService = new WebsocketPingerService(
-			getPingIntervalSeconds(), getMaxMalformedPongCount(), shouldSynchronizePingSending());
+	final WebsocketPingerService pingerService;
+
+	/**
+	 * Allows subclasses to override pinger mode. By default {@code false}.
+	 */
+	protected boolean isPingerInKeepAliveOnlyMode() { return false; }
 
 	/**
 	 * Allows subclasses to override ping interval.
+	 * By default {@link WebsocketPingerService#DEFAULT_INTERVAL}.
 	 */
-	protected int getPingIntervalSeconds() { return WebsocketPingerService.DEFAULT_PING_INTERVAL; }
+	protected int getPingIntervalSeconds() { return WebsocketPingerService.DEFAULT_INTERVAL; }
 
 	/**
-	 * Allows subclasses to override maximum allowed malformed pongs.
+	 * Allows subclasses to override ping failure limit.
+	 * By default {@link WebsocketPingerService#DEFAULT_FAILURE_LIMIT}.
 	 */
-	protected int getMaxMalformedPongCount() {
-		return WebsocketPingerService.DEFAULT_MAX_MALFORMED_PONG_COUNT;
-	}
+	protected int getPingFailureLimit() { return WebsocketPingerService.DEFAULT_FAILURE_LIMIT; }
 
 	/**
-	 * Allows subclasses to override <code>synchronizePingSending</code> flag.
+	 * Allows subclasses to override ping data size.
+	 * By default {@link WebsocketPingerService#DEFAULT_PING_SIZE}.
 	 */
-	protected boolean shouldSynchronizePingSending() {
-		return false;
-	}
+	protected int getPingSize() { return WebsocketPingerService.DEFAULT_PING_SIZE; }
+
+	/**
+	 * Allows subclasses to override {@code synchronizeSending} flag. By default {@code false}.
+	 */
+	protected boolean shouldSynchronizePingSending() { return false; }
 
 
 
 	public JpaPingingServletContextListener() {
+		if (isPingerInKeepAliveOnlyMode()) {
+			pingerService = new WebsocketPingerService(
+					getPingIntervalSeconds(), shouldSynchronizePingSending());
+		} else {
+			pingerService = new WebsocketPingerService(
+					getPingIntervalSeconds(),
+					getPingFailureLimit(),
+					getPingSize(),
+					shouldSynchronizePingSending()
+			);
+		}
 		PingingEndpointConfigurator.setPingerService(pingerService);
 	}
 
