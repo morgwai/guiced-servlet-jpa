@@ -3,12 +3,12 @@ package pl.morgwai.base.servlet.guiced.jpa;
 
 import java.io.IOException;
 
-import javax.servlet.AsyncContext;
-import javax.servlet.AsyncEvent;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.AsyncEvent;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 
 	/**
 	 * Dispatches request handling to {@link JpaServlet#jpaExecutor}.
-	 * Closes the obtained {@link javax.persistence.EntityManager} at the end. By default also calls
+	 * Closes the obtained {@link jakarta.persistence.EntityManager} at the end. By default also calls
 	 * {@link AsyncContext#complete()}: if a subclass wants to dispatch processing back to the
 	 * container via {@link AsyncContext#dispatch(String)} or to another executor, then
 	 * {@link #shouldCallAsyncContextComplete(HttpServletRequest)} should be overridden to return
@@ -80,7 +80,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 	 * <p>
 	 * <b>NOTE:</b> combining non-container threads with {@link AsyncContext} timeout
 	 * mechanism requires proper synchronization between main request processing code (running on
-	 * {@link #jpaExecutor} thread and {@link javax.servlet.AsyncListener#onTimeout(AsyncEvent)}
+	 * {@link #jpaExecutor} thread and {@link jakarta.servlet.AsyncListener#onTimeout(AsyncEvent)}
 	 * (running on container thread) and may result in the main processing code throwing harmless
 	 * exceptions in case of timeouts even if the processing was discontinued
 	 * (for example as of Jetty 10.0.x, if response output was obtained, an interceptor at the end
@@ -99,7 +99,7 @@ public abstract class SimpleAsyncJpaServlet extends JpaServlet {
 	/**
 	 * Starts {@link AsyncContext}. By default calls {@link HttpServletRequest#startAsync()}. Can be
 	 * overridden if {@link
-	 * HttpServletRequest#startAsync(javax.servlet.ServletRequest, javax.servlet.ServletResponse)}
+	 * HttpServletRequest#startAsync(jakarta.servlet.ServletRequest, jakarta.servlet.ServletResponse)}
 	 * needs to be used.
 	 */
 	protected AsyncContext startAsync(HttpServletRequest request, HttpServletResponse response) {
